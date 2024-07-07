@@ -14,7 +14,7 @@ export default TabBar = ({ state, descriptors, navigation }) =>{
             : options.title !== undefined
             ? options.title
             : route.name;
-        if(["_sitemap","+not-found"].includes(route.name))
+        if(["_sitemap","+not-found","[section]","index"].includes(route.name))
         {
             return null;
         }
