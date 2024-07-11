@@ -1,11 +1,18 @@
 // MenuItem.js
 
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import useCartStore from '../../store/cartStore';
+const SectionItem = ({ item }) => {
 
-const SectionItem = ({ item, onPress }) => {
+    const {reduceProduct,addProduct,products} = useCartStore()
+    console.log(products)
   return (
-    <TouchableOpacity style={styles.item} onPress={() => onPress(item.id)}>
+    <TouchableOpacity style={styles.item}>
+    <View style={styles.item}>
+
+    
       <Image
         source={require('../../assets/images/react-logo.png')} // Replace with your image source
         style={styles.itemImage}
@@ -17,11 +24,15 @@ const SectionItem = ({ item, onPress }) => {
           <Text style={styles.itemCalories}>{item.calories}</Text>
         </View>
       </View>
-      {item.selected && (
-        <View style={styles.selectedIndicator}>
-          <View style={styles.checkmark} />
-        </View>
-      )}
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={{padding:10}} onPress={()=>reduceProduct(item)}>
+            <Ionicons name='remove' size={20} color={'#000'}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={{padding:10}} onPress={()=>addProduct(item)}>
+            <Ionicons name='add' size={20} color={'#000'}/>
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -67,6 +78,7 @@ const styles = StyleSheet.create({
     item: {
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent:'space-between',
       margin: 10,
     },
     itemImage: {
@@ -97,6 +109,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'blue',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor:'red'
       },
       checkmark: {
         width: 20,
@@ -104,6 +117,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'blue',
       },
+      buttonContainer:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent:'space-between',
+      }
   });
 
 export default SectionItem;

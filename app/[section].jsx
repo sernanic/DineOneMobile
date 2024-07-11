@@ -23,17 +23,7 @@ const Section = () => {
     };
   });
 
-  const handlePress = (itemId) => {
-    // Logic to handle item selection
-    // For example, toggle `selected` state in items array
-    const updatedItems = sectionItems.map(item => ({
-      ...item,
-      selected: item.id === itemId ? !item.selected : item.selected
-    }));
-    console.log("id",itemId)
-    // Update state or re-render to reflect the selection change
-    // setState({ sectionItems: updatedItems }); // Assuming using useState hook
-  };
+
 
   const handleExit = () => {
     router.push('/');
@@ -49,7 +39,7 @@ const Section = () => {
           imageStyle={styles.customImageStyle} // Optional custom styles
         />
         {sectionItems.map((item, index) => (
-          <SectionItem key={index} item={item} onPress={handlePress} />
+          <SectionItem key={index} item={item}  />
         ))}
       </ScrollView>
     </Animated.View>
