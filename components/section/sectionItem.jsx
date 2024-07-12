@@ -7,14 +7,16 @@ import useCartStore from '../../store/cartStore';
 const SectionItem = ({ item }) => {
 
     const {reduceProduct,addProduct,products} = useCartStore()
-    console.log(products)
+    const product = products[item.id];
+    const quantity = product ? product.quantity : 0;
+
   return (
     <TouchableOpacity style={styles.item}>
     <View style={styles.item}>
 
     
       <Image
-        source={require('../../assets/images/react-logo.png')} // Replace with your image source
+        source={require('@/assets/images/react-logo.png')} // Replace with your image source
         style={styles.itemImage}
       />
       <View style={styles.itemTextContainer}>
@@ -29,6 +31,7 @@ const SectionItem = ({ item }) => {
         <TouchableOpacity style={{padding:10}} onPress={()=>reduceProduct(item)}>
             <Ionicons name='remove' size={20} color={'#000'}/>
         </TouchableOpacity>
+        <View><Text>{quantity}</Text></View>
         <TouchableOpacity style={{padding:10}} onPress={()=>addProduct(item)}>
             <Ionicons name='add' size={20} color={'#000'}/>
         </TouchableOpacity>

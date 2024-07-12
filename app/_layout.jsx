@@ -11,6 +11,8 @@ export default _layout = () =>{
             <Tabs.Screen name="orders" options={{headerShown: false,title:"orders"}}/>
             <Tabs.Screen name="rewards" options={{headerShown: false,title:"rewards"}}/>
             <Tabs.Screen name="[section]" options={{headerShown: false,title:"section"}}/>
+            <Tabs.Screen name="cart" options={{headerShown: false,title:"cart"}}/>
+
         </Tabs>
         
     )

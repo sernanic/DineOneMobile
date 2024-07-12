@@ -1,46 +1,61 @@
 import { create } from 'zustand'
 
 const useCartStore = create((set) => ({
-  products: [],
+  products: {},
   items: 0,
   addProduct: (product) => set((state) => {
-    state.items++;
-    const hasProduct = state.products.find(p => p.id === product.id);    
-    if(hasProduct)
-    {
-        return{
-            products: state.products.map(p =>{
-                if(p.id === product.id)
-                {
-                    return{...p,quantity:p.quantity + 1}
-                }
-                return p;
-            })
-        }
-    }
-    else{
-        return{
-            products:[...state.products,{...product,quantity:1}]
-        }
-    }
-  }),
-  reduceProduct: (product) => set((state) =>{
-    return{
-        products: state.products.map(p =>{
-            if(p.id === product.id){
-                state.items--;
-                return{...p,quantity:p.quantity - 1}
-            }
-            return p;
-        }).filter(p =>p.quantity > 0 )
+    const existingProduct = state.products[product.id];
+    
+    if (existingProduct) {
+      return {
+        products: {
+          ...state.products,
+          [product.id]: {
+            ...existingProduct,
+            quantity: existingProduct.quantity + 1,
+          },
+        },
+        items: state.items + 1,
+      };
+    } else {
+      return {
+        products: {
+          ...state.products,
+          [product.id]: { ...product, quantity: 1 },
+        },
+        items: state.items + 1,
+      };
     }
   }),
-  clearCart: () => set(() => {
-    return {
-        items:0,
-        products:[]
-    }
-  }),
-}))
+  reduceProduct: (product) => set((state) => {
+    const existingProduct = state.products[product.id];
 
-export default useCartStore
+    if (existingProduct) {
+      if (existingProduct.quantity > 1) {
+        return {
+          products: {
+            ...state.products,
+            [product.id]: {
+              ...existingProduct,
+              quantity: existingProduct.quantity - 1,
+            },
+          },
+          items: state.items - 1,
+        };
+      } else {
+        const { [product.id]: _, ...remainingProducts } = state.products;
+        return {
+          products: remainingProducts,
+          items: state.items - 1,
+        };
+      }
+    }
+    return state; // No changes if product does not exist
+  }),
+  clearCart: () => set(() => ({
+    items: 0,
+    products: {},
+  })),
+}));
+
+export default useCartStore;
