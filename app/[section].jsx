@@ -15,13 +15,8 @@ const Section = () => {
   const router = useRouter();
   const { section } = useLocalSearchParams();
   const sectionItems = items[section] || [];
-  const translateY = useSharedValue(0);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: translateY.value }],
-    };
-  });
+
 
 
 
@@ -30,19 +25,19 @@ const Section = () => {
   };
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
-      <Header title={section} handleExit={handleExit} />
-      <ScrollView>
-        <BoxWithImage
-          imageSource={require('../assets/images/react-logo.png')} // or {uri: 'https://example.com/your-image.jpg'}
-          boxStyle={styles.customBoxStyle} // Optional custom styles
-          imageStyle={styles.customImageStyle} // Optional custom styles
-        />
-        {sectionItems.map((item, index) => (
-          <SectionItem key={index} item={item}  />
-        ))}
-      </ScrollView>
-    </Animated.View>
+      <View>
+        <Header title={section} handleExit={handleExit} />
+        <ScrollView>
+          <BoxWithImage
+            imageSource={require('../assets/images/react-logo.png')} // or {uri: 'https://example.com/your-image.jpg'}
+            boxStyle={styles.customBoxStyle} // Optional custom styles
+            imageStyle={styles.customImageStyle} // Optional custom styles
+          />
+          {sectionItems.map((item, index) => (
+            <SectionItem key={index} item={item}  />
+          ))}
+        </ScrollView>
+      </View>
   );
 };
 

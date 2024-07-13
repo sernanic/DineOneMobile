@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Animated, Button, Dimensions } from 'react-native';
-import colors from '../themes/theme';
+import Colors from "../constants/Colors"
 import { useRouter } from 'expo-router';
 import Header from '../components/menu/header';
 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     marginLeft: 10,
-    color: colors.primary,
+    color: "black",
   },
   animatedView: {
     flex: 1,

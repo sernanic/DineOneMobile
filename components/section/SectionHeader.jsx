@@ -12,7 +12,7 @@ const Header = ({ title, handleExit }) => {
       <TouchableOpacity onPress={() => router.push("/menu")} style={styles.backButton}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
-      <Text style={styles.title}>{title}{items}</Text>
+      <Text style={styles.title}>{title}</Text>
       <TouchableOpacity onPress={handleExit} style={styles.exitButton}>
         <Ionicons name="close" size={24} color="black" />
       </TouchableOpacity>
