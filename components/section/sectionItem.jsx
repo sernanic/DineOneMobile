@@ -4,14 +4,24 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import useCartStore from '../../store/cartStore';
+import { useRouter } from 'expo-router';
 const SectionItem = ({ item }) => {
 
     const {reduceProduct,addProduct,products} = useCartStore()
     const product = products[item.id];
     const quantity = product ? product.quantity : 0;
+    
+    const router = useRouter();
+    const handlePress = () => {
+        router.push({
+          pathname: '/[section]/[sectionItem]',
+          params: { SectionItem: item },
+        });
+      };
+    
 
   return (
-    <TouchableOpacity style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={handlePress}>
     <View style={styles.item}>
 
     

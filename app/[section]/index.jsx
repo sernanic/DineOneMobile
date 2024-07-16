@@ -3,10 +3,10 @@ import { Text, View, StyleSheet, ScrollView, Dimensions,Image } from 'react-nati
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Animated, { Easing } from 'react-native-reanimated';
 import { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import BoxWithImage from '../components/section/SectionImage';
-import Header from '../components/section/SectionHeader';
-import items  from '../data/foodItems';
-import SectionItem from '../components/section/sectionItem';
+import BoxWithImage from '@/components/section/SectionImage';
+import Header from '@/components/section/SectionHeader';
+import items  from '@/data/foodItems';
+import SectionItem from '@/components/section/sectionItem';
 
 
 const { height } = Dimensions.get('window');
@@ -29,7 +29,7 @@ const Section = () => {
         <Header title={section} handleExit={handleExit} />
         <ScrollView>
           <BoxWithImage
-            imageSource={require('../assets/images/react-logo.png')} // or {uri: 'https://example.com/your-image.jpg'}
+            imageSource={require('@/assets/images/react-logo.png')} // or {uri: 'https://example.com/your-image.jpg'}
             boxStyle={styles.customBoxStyle} // Optional custom styles
             imageStyle={styles.customImageStyle} // Optional custom styles
           />
