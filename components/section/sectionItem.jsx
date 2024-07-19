@@ -13,9 +13,10 @@ const SectionItem = ({ item }) => {
     
     const router = useRouter();
     const handlePress = () => {
+        console.log()
         router.push({
           pathname: '/[section]/[sectionItem]',
-          params: { SectionItem: item },
+          params: { SectionItemParam: JSON.stringify(item) },
         });
       };
     
