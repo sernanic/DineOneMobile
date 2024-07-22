@@ -1,7 +1,7 @@
 import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
-import Colors from '../constants/Colors';
+import Colors from '../../constants/Colors';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 

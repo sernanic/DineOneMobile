@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-na
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
-import BottomSheet from '../BottomSheet';
+import BottomSheet from '../location/LocationBottomSheet';
 
 interface HeaderProps {
   title: string;

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, View, StyleSheet, ScrollView, Dimensions, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, ScrollView, Dimensions, Image, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Animated, { Easing } from 'react-native-reanimated';
 import { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
@@ -7,6 +7,8 @@ import BoxWithImage from '@/components/section/SectionImage';
 import Header from '@/components/section/SectionHeader';
 import items from '@/data/foodItems';
 import SectionItem from '@/components/section/sectionItem';
+import { Ionicons } from '@expo/vector-icons';
+import SearchInput from '../../components/general/SearchInput';
 
 
 const { height } = Dimensions.get('window');
@@ -15,6 +17,22 @@ const Section = () => {
     const router = useRouter();
     const { section } = useLocalSearchParams();
     const sectionItems = items[section] || [];
+    const [searchText, setSearchText] = useState('');
+    const [filteredItems, setFilteredItems] = useState([]);
+
+    useEffect(() => {
+        setFilteredItems(
+            sectionItems.filter(item =>
+                item.name.toLowerCase().includes(searchText.toLowerCase()) 
+            )
+        );
+    }, [searchText, sectionItems]);
+
+
+    const pairs = [];
+    for (let i = 0; i < filteredItems.length; i += 2) {
+        pairs.push(filteredItems.slice(i, i + 2));
+    }
 
 
 
@@ -24,19 +42,26 @@ const Section = () => {
         router.push('/');
     };
 
+
     return (
-        <View>
+        <View style={{ padding: 5 }}>
             <Header title={section} handleExit={handleExit} />
-            <ScrollView>
-                <BoxWithImage
-                    imageSource={require('@/assets/images/react-logo.png')} // or {uri: 'https://example.com/your-image.jpg'}
-                    boxStyle={styles.customBoxStyle} // Optional custom styles
-                    imageStyle={styles.customImageStyle} // Optional custom styles
-                />
-                {sectionItems.map((item, index) => (
-                    <SectionItem key={index} item={item} />
-                ))}
-            </ScrollView>
+            <SearchInput searchValue={searchText}
+                onSearchChange={setSearchText} isShowFilterIcon={true} />
+            <FlatList
+                data={pairs}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <View style={styles.row}>
+                        {item.map((subItem, subIndex) => (
+                            <View style={styles.item} key={subIndex}>
+                                <SectionItem item={subItem} />
+                            </View>
+                        ))}
+                    </View>
+                )}
+            />
+
         </View>
     );
 };
@@ -81,7 +106,8 @@ const styles = StyleSheet.create({
     item: {
         flexDirection: 'row',
         alignItems: 'center',
-        margin: 10,
+        margin: 0,
+
     },
     itemImage: {
         width: 100,
@@ -104,6 +130,13 @@ const styles = StyleSheet.create({
         color: 'gray',
         marginLeft: 10,
     },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 20,
+        paddingRight: 20
+    },
+
 });
 
 export default Section;
