@@ -26,14 +26,6 @@ const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
     const product = products[item.id];
     const quantity = product ? product.quantity : 0;
 
-    const router = useRouter();
-    // const handlePress = () => {
-    //     router.push({
-    //         pathname: '/[section]/[sectionItem]',
-    //         params: { SectionItemParam: JSON.stringify(item) },
-    //     });
-
-    
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
     const openModal = (item:any) => {
@@ -50,22 +42,25 @@ const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
                     source={require('@/assets/images/react-logo.png')} // Replace with your image source
                     style={styles.itemImage}
                 />
-                <View style={styles.itemTextContainer}>
-                    <Text style={styles.itemTitle}>{item.name}</Text>
-                    <View style={styles.priceCaloriesContainer}>
-                        <Text style={styles.itemPrice}>{item.price}</Text>
+               
+                <Text style={styles.itemTitle}>{item.name}</Text>
+                <View style={styles.priceCaloriesContainer}>
+                        
                         <Text style={styles.itemCalories}>{item.calories}</Text>
                     </View>
-                </View>
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={{ padding: 10 }} onPress={() => reduceProduct(item)}>
+                {/* <TouchableOpacity style={{ padding: 10 }} onPress={() => reduceProduct(item)}>
                     <Ionicons name='remove' size={20} color={'#000'} />
                 </TouchableOpacity>
                 <View><Text>{quantity}</Text></View>
                 <TouchableOpacity style={{ padding: 10 }} onPress={() => addProduct(item)}>
                     <Ionicons name='add' size={20} color={'#000'} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+                <Text style={styles.priceText}>{item.price}</Text>
+                <View style={styles.addContainer}>
+                    <Ionicons name='add' size={24} color={'#fff'} />
+                </View>
             </View>
         </TouchableOpacity>
     );
@@ -98,7 +93,9 @@ const styles = StyleSheet.create({
     },
     priceCaloriesContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
+        width:150
+        
     },
     price: {
         fontSize: 16,
@@ -129,6 +126,7 @@ const styles = StyleSheet.create({
     itemTitle: {
         fontSize: 16,
         fontWeight: 'bold',
+        paddingBottom:10,
     },
     itemPrice: {
         fontSize: 14,
@@ -155,8 +153,19 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
+        width: '100%',
+        alignItems: 'flex-start',
+        paddingLeft:10,
+    },
+    addContainer:{
+        backgroundColor:'green',
+        borderTopLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        padding:5
+    },
+    priceText:{
+        fontWeight:'500'
     }
 });
 
