@@ -1,33 +1,37 @@
-import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, Dimensions } from 'react-native';
 
-const BoxWithImage = ({ imageSource, boxStyle, imageStyle }) => {
+const FullWidthImage = ({ source }) => {
+  const windowWidth = Dimensions.get('window').width;
+  const [imageHeight, setImageHeight] = useState(400);
+
+  const onImageLoad = (event) => {
+    const { width, height } = event.nativeEvent.source;
+    const scaleFactor = windowWidth / width;
+    const calculatedHeight = height * scaleFactor;
+    setImageHeight(Math.min(calculatedHeight, 400));
+  };
+
   return (
-    <View style={[styles.box, boxStyle]}>
-      <Image source={imageSource} style={[styles.image, imageStyle]} />
+    <View style={[styles.container, { height: imageHeight }]}>
+      <Image
+        source={source}
+        style={[styles.image, { width: windowWidth, height: imageHeight }]}
+        resizeMode="cover"
+        onLoad={onImageLoad}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  box: {
-    width: 200,
-    height: 200,
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+  container: {
+    width: '100%',
+    overflow: 'hidden',
   },
   image: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
+    width: '100%',
   },
 });
 
-export default BoxWithImage;
+export default FullWidthImage;

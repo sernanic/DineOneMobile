@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, Dimensions, Image, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import Animated, { Easing } from 'react-native-reanimated';
-import { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import BoxWithImage from '@/components/section/SectionImage';
 import Header from '@/components/section/SectionHeader';
 import items from '@/data/foodItems';
 import SectionItem from '@/components/section/sectionItem';
-import { Ionicons } from '@expo/vector-icons';
 import SearchInput from '../../components/general/SearchInput';
 
 

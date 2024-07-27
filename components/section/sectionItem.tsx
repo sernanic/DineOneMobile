@@ -22,41 +22,33 @@ interface SectionItemProps {
 
 const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
     const { reduceProduct, addProduct, products } = useCartStore();
-    const {setSelectedProduct} = useProductStore();
+    const { setSelectedProduct } = useProductStore();
     const product = products[item.id];
     const quantity = product ? product.quantity : 0;
 
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-    const openModal = (item:any) => {
-      bottomSheetRef.current?.present();
-      setSelectedProduct(item);
+    const openModal = (item: any) => {
+        bottomSheetRef.current?.present();
+        setSelectedProduct(item);
     };
 
     return (
         <TouchableOpacity style={styles.item} onPress={() => openModal(item)}>
             <View style={styles.item}>
-            <BottomSheet ref={bottomSheetRef} />
+                <BottomSheet ref={bottomSheetRef} />
 
                 <Image
                     source={require('@/assets/images/react-logo.png')} // Replace with your image source
                     style={styles.itemImage}
                 />
-               
+
                 <Text style={styles.itemTitle}>{item.name}</Text>
                 <View style={styles.priceCaloriesContainer}>
-                        
-                        <Text style={styles.itemCalories}>{item.calories}</Text>
-                    </View>
+                    <Text style={styles.itemCalories}>{item.calories}</Text>
+                </View>
             </View>
             <View style={styles.buttonContainer}>
-                {/* <TouchableOpacity style={{ padding: 10 }} onPress={() => reduceProduct(item)}>
-                    <Ionicons name='remove' size={20} color={'#000'} />
-                </TouchableOpacity>
-                <View><Text>{quantity}</Text></View>
-                <TouchableOpacity style={{ padding: 10 }} onPress={() => addProduct(item)}>
-                    <Ionicons name='add' size={20} color={'#000'} />
-                </TouchableOpacity> */}
                 <Text style={styles.priceText}>{item.price}</Text>
                 <View style={styles.addContainer}>
                     <Ionicons name='add' size={24} color={'#fff'} />
@@ -94,8 +86,8 @@ const styles = StyleSheet.create({
     priceCaloriesContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        width:150
-        
+        width: 150
+
     },
     price: {
         fontSize: 16,
@@ -111,9 +103,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         margin: 10,
-        backgroundColor:"#fff",
-        borderRadius:15,
-        width:180,
+        backgroundColor: "#fff",
+        borderRadius: 15,
+        width: 180,
     },
     itemImage: {
         width: 100,
@@ -126,7 +118,7 @@ const styles = StyleSheet.create({
     itemTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-        paddingBottom:10,
+        paddingBottom: 10,
     },
     itemPrice: {
         fontSize: 14,
@@ -156,16 +148,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
         alignItems: 'flex-start',
-        paddingLeft:10,
+        paddingLeft: 10,
     },
-    addContainer:{
-        backgroundColor:'green',
+    addContainer: {
+        backgroundColor: 'green',
         borderTopLeftRadius: 10,
         borderBottomRightRadius: 10,
-        padding:5
+        padding: 5
     },
-    priceText:{
-        fontWeight:'500'
+    priceText: {
+        fontWeight: '500'
     }
 });
 
