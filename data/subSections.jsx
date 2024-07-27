@@ -1,0 +1,31 @@
+const subsections = [
+    { id: 1, name: 'Soft Drinks', section: 'Drinks' },
+    { id: 2, name: 'Juices', section: 'Drinks' },
+    { id: 3, name: 'Teas', section: 'Drinks' },
+    { id: 4, name: 'Coffee', section: 'Drinks' },
+    { id: 5, name: 'Milk-Based Drinks', section: 'Drinks' },
+    { id: 6, name: 'Healthy Drinks', section: 'Drinks' },
+    { id: 7, name: 'Water', section: 'Drinks' },
+    { id: 8, name: 'Energy and Sports Drinks', section: 'Drinks' },
+    { id: 9, name: 'Hot Drinks', section: 'Drinks' },
+    { id: 10, name: 'Sodas and Carbonated Drinks', section: 'Drinks' },
+    { id: 11, name: 'Classic Burritos', section: 'Burritos' },
+    { id: 12, name: 'Vegetarian Burritos', section: 'Burritos' },
+    { id: 13, name: 'Spicy Burritos', section: 'Burritos' },
+    { id: 14, name: 'Barbecue Burritos', section: 'Burritos' },
+    { id: 15, name: 'Seafood Burritos', section: 'Burritos' },
+    { id: 16, name: 'Breakfast Burritos', section: 'Burritos' },
+    { id: 17, name: 'Meat Tacos', section: 'Tacos' },
+    { id: 18, name: 'Vegetarian Tacos', section: 'Tacos' },
+    { id: 19, name: 'Spicy Tacos', section: 'Tacos' },
+    { id: 20, name: 'Barbecue Tacos', section: 'Tacos' },
+    { id: 21, name: 'Seafood Tacos', section: 'Tacos' },
+    { id: 22, name: 'Cakes', section: 'Desserts' },
+    { id: 23, name: 'Pies', section: 'Desserts' },
+    { id: 24, name: 'Cookies', section: 'Desserts' },
+    { id: 25, name: 'Frozen Desserts', section: 'Desserts' },
+    { id: 26, name: 'Pastries', section: 'Desserts' },
+    { id: 27, name: 'Puddings', section: 'Desserts' }
+  ];
+
+  export default subsections

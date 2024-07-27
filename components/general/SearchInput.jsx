@@ -4,9 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 
 const SearchInput = ({ searchValue, onSearchChange, isShowFilterIcon }) => {
     return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.iconContainer}>
-                <Ionicons name="search" size={20} color="#000" />
+        <View style={styles.searchContainer}>
+            <TouchableOpacity style={{padding: 5}}>
+                <Ionicons name="search" size={20} color="#439D2C" />
             </TouchableOpacity>
             <TextInput
                 style={styles.input}
@@ -17,7 +17,7 @@ const SearchInput = ({ searchValue, onSearchChange, isShowFilterIcon }) => {
             {isShowFilterIcon && (
                 
                 <TouchableOpacity style={styles.iconContainer}>
-                    <Ionicons name="options-outline" size={20} color="#000" />
+                    <Ionicons name="options-outline" size={20} color="#fff" />
                 </TouchableOpacity>
             )}
         </View>
@@ -25,22 +25,28 @@ const SearchInput = ({ searchValue, onSearchChange, isShowFilterIcon }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
+    searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
+        backgroundColor: 'white',
+        borderRadius: 8,
         paddingHorizontal: 10,
-        margin: 10,
-    },
+        paddingVertical: 8,
+        backgroundColor:'#EEF9EB',
+        marginLeft:15,
+        marginRight:15,
+        height:55
+      },
     input: {
         flex: 1,
         paddingVertical: 10,
         paddingHorizontal: 5,
+        fontSize:18
     },
     iconContainer: {
         padding: 5,
+        backgroundColor:'#439D2C',
+        borderRadius:8
     },
 });
 

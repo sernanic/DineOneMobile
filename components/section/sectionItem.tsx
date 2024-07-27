@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         margin: 10,
-        backgroundColor: "#fff",
+        backgroundColor: "#F7F7F7",
         borderRadius: 15,
         width: 180,
     },

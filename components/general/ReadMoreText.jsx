@@ -25,7 +25,7 @@ const ReadMore = ({ text, maxLength = 100,style }) => {
         )}
         {isExpanded && isLongText && (
           <TouchableOpacity onPress={toggleExpand}>
-            <Text style={styles.readMore}> Read Less</Text>
+            <Text style={styles.readLess}> Read Less</Text>
           </TouchableOpacity>
         )}
       </Text>
@@ -37,11 +37,18 @@ const styles = StyleSheet.create({
   container: {
     margin: 10,
   },
-  text: {
-    fontSize: 16,
-  },
   readMore: {
     color: 'blue',
+    fontSize: 16,
+    paddingTop:15,
+    paddingLeft:10
+  },
+  readLess: {
+    color: 'blue',
+    fontSize: 16,
+    position:'absolute',
+    top:-6,
+    left:10
   },
 });
 

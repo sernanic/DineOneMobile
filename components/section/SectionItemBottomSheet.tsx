@@ -2,10 +2,10 @@ import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-n
 import React, { forwardRef, useCallback, useLayoutEffect, useMemo } from 'react';
 import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import Colors from '@/constants/Colors';
-import { Link, useNavigation } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import useProductStore from '@/store/selectedProductStore';
-import { Button, Divider, Text } from '@ui-kitten/components';
+import { Button, Text } from '@ui-kitten/components';
 import useCartStore from '@/store/cartStore';
 import FullWidthImage from './SectionImage'
 import ReadMoreText from '@/components/general/ReadMoreText'
@@ -18,7 +18,6 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
     const { selectedProduct } = useProductStore();
     const { reduceProduct, addProduct, products } = useCartStore();
 
-    // Add a null check for selectedProduct
     const productId = selectedProduct?.id;
     const product = productId ? products[productId] : undefined;
     const quantity = product ? product.quantity : 1;
@@ -70,7 +69,7 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
                             </View>
                             {/*TODO: Add Title Styling */}
                             <Text style={styles.itemDescription}>About the food</Text>
-                            <ReadMoreText text={selectedProduct.description} maxLength={50} style={{fontSize:16}}/>
+                            <ReadMoreText text={selectedProduct.description} maxLength={50} style={{fontSize:16,color: 'gray',padding:10}}/>
                       </View>
                         <View style={styles.buttonContainer}>
                             <Button style={styles.addCartButton} onPress={() => addProduct(selectedProduct)}>Add To Cart</Button>
@@ -87,6 +86,7 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
 const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
+        backgroundColor: '#fff',
     },
     container: {
         flex: 1,
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     detailsContainer: {
-        backgroundColor: Colors.lightGrey,
+        backgroundColor: '#fff',
     },
     stickySection: {
         backgroundColor: '#fff',

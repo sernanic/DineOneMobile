@@ -42,7 +42,6 @@ const Menu = () => {
   return (
     <>
       <Header />
-      {/* <Button title="Toggle Menu" onPress={toggleMenu} /> */}
       <ScrollView style={styles.container}>
         {visible && (
           <Animated.View
