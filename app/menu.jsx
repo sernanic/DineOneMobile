@@ -1,16 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Animated, Button, Dimensions } from 'react-native';
-import Colors from "../constants/Colors"
+import Colors from "@/constants/Colors"
 import { useRouter } from 'expo-router';
-import Header from '../components/menu/header';
+import Header from '@/components/menu/header';
 
 const { height } = Dimensions.get('window');
 
 const sections = [
-  { section: 'Drinks', image: require('../assets/images/icon.png') },
-  { section: 'Burritos', image: require('../assets/images/icon.png') },
-  { section: 'Tacos', image: require('../assets/images/icon.png') },
-  { section: 'Desserts', image: require('../assets/images/icon.png') },
+  { section: 'Drinks', image: require('@/assets/images/icon.png') },
+  { section: 'Burritos', image: require('@/assets/images/icon.png') },
+  { section: 'Tacos', image: require('@/assets/images/icon.png') },
+  { section: 'Desserts', image: require('@/assets/images/icon.png') },
 ];
 
 const Menu = () => {

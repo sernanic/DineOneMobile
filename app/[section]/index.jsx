@@ -7,6 +7,7 @@ import allSubSections from '@/data/subSections';
 import SectionItem from '@/components/section/sectionItem';
 import SearchInput from '@/components/general/SearchInput';
 import HorizontalSubsectionList from '@/components/section/HorizontalSubsectionList';
+import Colors from '@/constants/Colors';
 
 const { height } = Dimensions.get('window');
 
@@ -102,8 +103,8 @@ const Section = () => {
             />
             
             <FlatList
-                style={{ paddingTop: 10 }}
                 data={pairs}
+                contentContainerStyle={{ paddingBottom: 350 }}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.row}>
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingBottom: 20,
         paddingLeft: 12,
-        color: 'green'
+        color: Colors.primary
     }
 });
 

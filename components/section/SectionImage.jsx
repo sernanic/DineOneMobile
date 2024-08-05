@@ -1,5 +1,9 @@
+import Colors from '@/constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { BlurView } from 'expo-blur';
+
 
 const FullWidthImage = ({ source }) => {
   const windowWidth = Dimensions.get('window').width;
@@ -20,6 +24,16 @@ const FullWidthImage = ({ source }) => {
         resizeMode="cover"
         onLoad={onImageLoad}
       />
+      {/* <View style={[styles.icon, styles.roundButton]}>
+        <Ionicons name="chevron-back-outline" size={30} color="white"  />
+      </View> */}
+
+      <TouchableOpacity style={[styles.icon]}>
+        <BlurView intensity={50} style={styles.blurContainer}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </BlurView>
+      </TouchableOpacity>
+
     </View>
   );
 };
@@ -31,6 +45,25 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
+  },
+  icon: {
+    position: 'absolute',
+    top: 10,
+    left: 15,
+  },
+  roundButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  blurContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20, // Optional, to ensure the blur effect is round
   },
 });
 

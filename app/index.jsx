@@ -13,7 +13,7 @@ const Home = () => {
     <>
     <Header title={"test"} cartItemsCount={items}  />
     <View style={styles.itemContainer}>
-          <Text style={styles.sectionText}>helllo</Text>
+          <Text style={styles.sectionText}></Text>
         </View>
     </>
     

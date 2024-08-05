@@ -8,7 +8,7 @@ import { useRouter } from 'expo-router';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import BottomSheet from './SectionItemBottomSheet';
 import useProductStore from '@/store/selectedProductStore'
-
+import Colors from '@/constants/Colors';
 
 
 interface SectionItemProps {
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#F7F7F7",
         borderRadius: 15,
         width: 180,
+        // height:150,
     },
     itemImage: {
         width: 100,
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
     },
     addContainer: {
-        backgroundColor: 'green',
+        backgroundColor: Colors.primary,
         borderTopLeftRadius: 10,
         borderBottomRightRadius: 10,
         padding: 5

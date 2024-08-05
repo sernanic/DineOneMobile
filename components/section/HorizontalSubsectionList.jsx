@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import Colors from '@/constants/Colors';
 
 const HorizontalSubsectionList = ({ subsections, onSelectSubsection }) => {
     const [selectedId, setSelectedId] = useState(null);
@@ -18,7 +19,7 @@ const HorizontalSubsectionList = ({ subsections, onSelectSubsection }) => {
         >
             <Text style={[
                 styles.subsectionText,
-                { color: item.id === selectedId ? '#007BFF' : 'gray' }  // Change text color based on selection
+                { color: item.id === selectedId ? Colors.primary : 'gray' }  // Change text color based on selection
             ]}>
                 {item.name}
             </Text>

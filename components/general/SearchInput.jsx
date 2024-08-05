@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '@/constants/Colors';
 
 const SearchInput = ({ searchValue, onSearchChange, isShowFilterIcon }) => {
     return (
         <View style={styles.searchContainer}>
             <TouchableOpacity style={{padding: 5}}>
-                <Ionicons name="search" size={20} color="#439D2C" />
+                <Ionicons name="search" size={20} color={Colors.primary} />
             </TouchableOpacity>
             <TextInput
                 style={styles.input}
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 10,
         paddingVertical: 8,
-        backgroundColor:'#EEF9EB',
+        backgroundColor:'#EEF9EB', //TODO: change to color constants
         marginLeft:15,
         marginRight:15,
         height:55
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         padding: 5,
-        backgroundColor:'#439D2C',
+        backgroundColor:Colors.primary,
         borderRadius:8
     },
 });

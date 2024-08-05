@@ -63,7 +63,7 @@ export default TabBar = ({ state, descriptors, navigation }) =>{
 const styles = StyleSheet.create({
     tabbar:{
         position:"absolute",
-        bottom:25,
+        bottom:5,
         flexDirection:"row",
         justifyContent:"space-between",
         alignItems:"center",
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
         shadowOffset:{width:0,height:10},
         shadowRadius:10,
         shadowOpacity:0.1,
+        width:'100%'
     },
     tabbarItem:{
         flex:1,

@@ -8,11 +8,11 @@ import useProductStore from '@/store/selectedProductStore';
 import { Button, Text } from '@ui-kitten/components';
 import useCartStore from '@/store/cartStore';
 import FullWidthImage from './SectionImage'
-import ReadMoreText from '@/components/general/ReadMoreText'
+
 export type Ref = BottomSheetModal;
 
 const BottomSheet = forwardRef<Ref>((props, ref) => {
-    const snapPoints = useMemo(() => ['100%'], []);
+    const snapPoints = useMemo(() => ['94%'], []);
     const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, []);
     const { dismiss } = useBottomSheetModal();
     const { selectedProduct } = useProductStore();
@@ -21,9 +21,8 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
     const productId = selectedProduct?.id;
     const product = productId ? products[productId] : undefined;
     const quantity = product ? product.quantity : 1;
-
-
     const navigation = useNavigation();
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTransparent: true,
@@ -39,7 +38,7 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
     return (
         <BottomSheetModal
             handleIndicatorStyle={{ display: 'none' }}
-            backgroundStyle={{ borderRadius: 0, backgroundColor: Colors.lightGrey }}
+            backgroundStyle={{ borderRadius: 10, backgroundColor: Colors.lightGrey }}
             overDragResistanceFactor={0}
             ref={ref}
             snapPoints={snapPoints}
@@ -53,11 +52,12 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
                             <View style={{flexDirection:'row',justifyContent:"space-between",padding:20}}>
                                 <View>
                                     {/* TODO: Add Title Styling */}
-                                    <View><Text>{selectedProduct.name}</Text></View>
+                                    <View><Text style={styles.itemName}>{selectedProduct.name}</Text></View>
                                     {/*TODO: Add pricing Styling */}
-                                    <View><Text>{selectedProduct.price}</Text></View>
+                                    <View><Text style={styles.itemPrice}>{selectedProduct.price}</Text></View>
                                 </View>
-                                <View style={styles.quantityContainer}>
+                                <View style={{flex:1,alignItems:'flex-end',justifyContent:'center'}}>
+                                <View style={styles.quantityButton}>
                                     <TouchableOpacity style={{ padding: 10 }} onPress={() => reduceProduct(selectedProduct)}>
                                         <Ionicons name='remove' size={20} color={'#fff'} />
                                     </TouchableOpacity>
@@ -66,10 +66,11 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
                                         <Ionicons name='add' size={20} color={'#fff'} />
                                     </TouchableOpacity> 
                                 </View>
+                                </View>
                             </View>
                             {/*TODO: Add Title Styling */}
-                            <Text style={styles.itemDescription}>About the food</Text>
-                            <ReadMoreText text={selectedProduct.description} maxLength={50} style={{fontSize:16,color: 'gray',padding:10}}/>
+                            <Text style={styles.itemDescriptionTitle}>About the food</Text>
+                            <Text style={styles.itemDescription}>{selectedProduct.description}</Text>
                       </View>
                         <View style={styles.buttonContainer}>
                             <Button style={styles.addCartButton} onPress={() => addProduct(selectedProduct)}>Add To Cart</Button>
@@ -96,16 +97,6 @@ const styles = StyleSheet.create({
     detailsContainer: {
         backgroundColor: '#fff',
     },
-    stickySection: {
-        backgroundColor: '#fff',
-        marginLeft: 70,
-        height: 100,
-        justifyContent: 'flex-end',
-    },
-    stickySectionText: {
-        fontSize: 20,
-        margin: 10,
-    },
     roundButton: {
         width: 40,
         height: 40,
@@ -124,13 +115,15 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 20,
     },
-    itemDescription: {
-        marginTop: 20,
+    itemDescriptionTitle: {
         marginLeft: 20,
+        fontSize:20,
+        fontWeight:'bold'
     },
-    price: {
-        fontSize: 18,
-        marginBottom: 8,
+    itemDescription:{
+        fontSize:16,
+        color: 'gray',
+        padding:20
     },
     calories: {
         fontSize: 18,
@@ -146,31 +139,29 @@ const styles = StyleSheet.create({
     },
     addCartButton: {
         borderRadius: 10,
-        height: 50
-
-
+        height: 50,
+        backgroundColor:Colors.primary
     },
-    imageContainer: {
-        borderRadius: 10,
-        overflow: 'hidden',
-        width: 350,
-        height: 350,
-        backgroundColor: 'red',
-        alignSelf: 'center',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-    },
-    quantityContainer:{
+    quantityButton:{
         flexDirection:'row',
-        backgroundColor:'blue',
+        backgroundColor:Colors.primary,
         height:50,
         width:110,
         borderRadius:20,
         alignItems:'center',
         justifyContent:'center'
     },
+    itemName:{
+        fontSize:25,
+        fontWeight: 'bold',
+        paddingBottom:15
+    },
+    itemPrice:{
+        fontSize:20,
+        fontWeight: '500',
+        paddingBottom:15,
+        color:Colors.primary
+    }
 });
 
 export default BottomSheet;
