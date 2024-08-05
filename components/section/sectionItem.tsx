@@ -49,7 +49,7 @@ const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <Text style={styles.priceText}>{item.price}</Text>
+                <Text style={styles.priceText}>${item.price}</Text>
                 <View style={styles.addContainer}>
                     <Ionicons name='add' size={24} color={'#fff'} />
                 </View>
