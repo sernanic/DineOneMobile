@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
 import BottomSheet from '../location/LocationBottomSheet';
+import { useNavigation } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
 
 interface HeaderProps {
   title: string;
@@ -14,6 +16,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title, cartItemsCount, handleAddToCart }) => {
   const router = useRouter();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const navigation = useNavigation();
 
   const openModal = () => {
     bottomSheetRef.current?.present();
@@ -23,9 +26,12 @@ const Header: React.FC<HeaderProps> = ({ title, cartItemsCount, handleAddToCart 
     <SafeAreaView style={{ backgroundColor: '#fff' }}>
       <BottomSheet ref={bottomSheetRef} />
       <View style={styles.header}>
-        <TouchableOpacity style={styles.touchableArea} onPress={openModal}>
+        <TouchableOpacity style={styles.touchableArea} onPress={() => {
+          navigation.dispatch(DrawerActions.openDrawer());
+        }}>
           <Ionicons name="location" size={24} color="black" />
         </TouchableOpacity>
+        <Text>hello</Text>
         <TouchableOpacity onPress={handleAddToCart} style={styles.touchableArea}>
           <Ionicons name="bag" size={24} color="black" />
           {cartItemsCount > 0 && (

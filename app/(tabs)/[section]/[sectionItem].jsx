@@ -2,10 +2,10 @@ import React, { useEffect, useLayoutEffect } from 'react';
 import { View,  StyleSheet, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import ParallaxScrollView from '../../components/parallaxScrollView';
+import ParallaxScrollView from '@/components/parallaxScrollView';
 import Colors from '@/constants/Colors';
 import {  Button, Divider, Text } from '@ui-kitten/components';
-import useCartStore from '../../store/cartStore';
+import useCartStore from '@/store/cartStore';
 
 
 const SectionItemScreen = () =>

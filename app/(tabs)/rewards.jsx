@@ -1,10 +1,13 @@
 import { View, Text, Image, StyleSheet, FlatList } from 'react-native'
 import React from 'react'
-import Header from '../components/rewards/RewardsHeader'
+import Header from '../../components/rewards/RewardsHeader'
 import foodRewards from '@/data/foodRewards';
-import RewardItem from '../components/rewards/RewardItemCard';
+import RewardItem from '../../components/rewards/RewardItemCard';
+import { useRouter } from 'expo-router';
 
-export default Profile = () => {
+export default Rewards = () => {
+    const router = useRouter();
+
     const handleExit = () => {
         router.push('/');
     };
