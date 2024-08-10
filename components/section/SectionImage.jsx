@@ -5,7 +5,7 @@ import { View, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-nat
 import { BlurView } from 'expo-blur';
 
 
-const FullWidthImage = ({ source }) => {
+const FullWidthImage = ({ source,onBackPress }) => {
   const windowWidth = Dimensions.get('window').width;
   const [imageHeight, setImageHeight] = useState(400);
 
@@ -28,7 +28,7 @@ const FullWidthImage = ({ source }) => {
         <Ionicons name="chevron-back-outline" size={30} color="white"  />
       </View> */}
 
-      <TouchableOpacity style={[styles.icon]}>
+      <TouchableOpacity style={[styles.icon]} onPress={onBackPress}>
         <BlurView intensity={50} style={styles.blurContainer}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </BlurView>

@@ -18,9 +18,6 @@ export default Cart = () => {
     const totalInfoHeight = screenHeight * 0.35;
     const { subtotal } = useCartStore();
 
-    console.log(subtotal)
-    console.log(products)
-
     return (
         <View style={styles.container}>
             <Header title="Cart" handleExit={handleExit} />

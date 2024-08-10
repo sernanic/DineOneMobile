@@ -1,9 +1,31 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import BottomSheet from './RewardsBottomSheet';
 
-const RewardItem = ({ item }) => {
+interface RewardItemProps {
+  item: {
+    id: string;
+    points: number;
+    title: string;
+    description: string;
+    imgsrc: string;    
+  };
+}
+
+const RewardItem: React.FC<RewardItemProps> = ({ item }) => {
+
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+
+    const openModal = (item: any) => {
+        bottomSheetRef.current?.present();
+    };
+    
   return (
+    <TouchableOpacity  onPress={() => openModal(item)}>
     <View style={styles.container}>
+      <BottomSheet ref={bottomSheetRef} rewardItem={item} />
+
       <View style={styles.leftContent}>
         <Image
           source={{ uri: item.imgsrc }}
@@ -15,6 +37,7 @@ const RewardItem = ({ item }) => {
         <Text style={styles.points}>{item.points} points</Text>
       </View>
     </View>
+    </TouchableOpacity>
   );
 };
 
