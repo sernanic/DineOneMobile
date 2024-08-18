@@ -31,14 +31,14 @@ export default function Layout() {
                 }
               }}
             />
-            {/* <Drawer.Screen
+           {/* <Drawer.Screen
               name="profile"
               options={{
                 drawerLabel: "Profile",
                 title: "My Profile",
                 headerShown: false,
               }}
-            />
+            /> 
             <Drawer.Screen
               name="settings"
               options={{

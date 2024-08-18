@@ -1,41 +1,60 @@
-import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
-import React, { forwardRef, useCallback, useLayoutEffect, useMemo } from 'react';
+import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView, Text } from 'react-native';
+import React, { forwardRef, useCallback, useLayoutEffect, useMemo, useState, useEffect } from 'react';
 import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import Colors from '@/constants/Colors';
-import { Button, Text } from '@ui-kitten/components';
-import FullWidthImage from '@/components/section/SectionImage'
-import Animated, { useSharedValue } from 'react-native-reanimated';
+import { useNavigation } from 'expo-router';
+import useProductStore from '@/store/selectedProductStore';
+import useCartStore from '@/store/cartStore';
+import { createClient } from '@supabase/supabase-js'
+import Auth from './auth';
+import { useAuthStore } from '@/store/authStore';
+import { Session } from '@supabase/supabase-js';
 
 
 export type Ref = BottomSheetModal;
 
 
-interface RewardItemType {
-    id: string;
-    points: number;
-    title: string;
-    description: string;
-    imgsrc?: string;
-}
 
-interface BottomSheetProps {
-    rewardItem: RewardItemType;
-}
+const supabase = createClient('https://qnvhmkpesjjfuesjvwdf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFudmhta3Blc2pqZnVlc2p2d2RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjM2NzMyMzAsImV4cCI6MjAzOTI0OTIzMH0.PLTLiSpl1yhBbjbNyZj6pYMcQXzphZHZonSZEgMaYuk')
 
-const BottomSheet = forwardRef<Ref, { rewardItem: RewardItemType }>((props, ref) => {
+const BottomSheet = forwardRef<Ref>((props, ref) => {
     const snapPoints = useMemo(() => ['94%'], []);
     const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, []);
     const { dismiss } = useBottomSheetModal();
-    const { rewardItem } = props;
-    const width = useSharedValue(100);
+    const { selectedProduct } = useProductStore();
+    const { reduceProduct, addProduct, products } = useCartStore();
 
-    const handlePress = () => {
-        width.value = width.value + 50;
-      };
+    const productId = selectedProduct?.id;
+    const product = productId ? products[productId] : undefined;
+    const quantity = product ? product.quantity : 1;
+    const navigation = useNavigation();
+
 
     const handleCloseModal = () => {
         dismiss();
     };
+
+    const { session, setSession } = useAuthStore(state => ({
+        session: state.session,
+        setSession: state.setSession,
+    }));
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session)
+            console.log(session)
+        })
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session)
+            console.log(session)
+        })
+
+        return () => subscription.unsubscribe()
+    }, [])
+
     return (
         <BottomSheetModal
             handleIndicatorStyle={{ display: 'none' }}
@@ -45,29 +64,9 @@ const BottomSheet = forwardRef<Ref, { rewardItem: RewardItemType }>((props, ref)
             snapPoints={snapPoints}
             backdropComponent={renderBackdrop}>
             <View style={styles.contentContainer}>
-                {rewardItem ? (
-                    <View style={styles.container}>
-                        <View style={styles.detailsContainer}>
-                            <FullWidthImage source={require('@/assets/images/react-logo.png')} onBackPress={handleCloseModal}/>
-                            
-                            <View style={{ flexDirection: 'row', justifyContent: "space-between", padding: 20 }}>
-                                <View>
-                                    {/* TODO: Add Title Styling */}
-                                    <View><Text style={styles.itemName}>{rewardItem.title}</Text></View>
-                                    {/*TODO: Add pricing Styling */}
-                                    <View><Text style={styles.itemPrice}>{rewardItem.points} Points</Text></View>
-                                </View>
-                            </View>
-                            {/*TODO: Add Title Styling */}
-                            <Text style={styles.itemDescription}>{rewardItem.description}</Text>
-                        </View>
-                        <View style={styles.buttonContainer}>
-                            <Button style={styles.addCartButton} >Reedem</Button>
-                        </View>
-                    </View>
-                ) : (
-                    <Text >No product selected</Text>
-                )}
+            <Auth />
+            {session && session.user && <Text>{session.user.id}</Text>}
+            <Text>hello</Text>
             </View>
         </BottomSheetModal>
     );
@@ -120,12 +119,11 @@ const styles = StyleSheet.create({
 
     buttonContainer: {
         position: 'absolute',
-        bottom: "20%",
-        left:'25%',
+        bottom: 25,
+        left: 0,
         right: 0,
         padding: 10,
         backgroundColor: '#fff',
-        width:200
     },
     addCartButton: {
         borderRadius: 10,
@@ -144,12 +142,12 @@ const styles = StyleSheet.create({
     itemName: {
         fontSize: 25,
         fontWeight: 'bold',
-        paddingBottom: 10
+        paddingBottom: 15
     },
     itemPrice: {
-        fontSize: 16,
-        fontWeight: '400',
-        paddingBottom: 10,
+        fontSize: 20,
+        fontWeight: '500',
+        paddingBottom: 15,
         color: Colors.primary
     }
 });

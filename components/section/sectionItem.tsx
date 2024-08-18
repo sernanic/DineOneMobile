@@ -11,6 +11,7 @@ import useProductStore from '@/store/selectedProductStore'
 import Colors from '@/constants/Colors';
 
 
+
 interface SectionItemProps {
     item: {
         id: string;
@@ -43,7 +44,7 @@ const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
                     style={styles.itemImage}
                 />
 
-                <Text style={styles.itemTitle}>{item.name}</Text>
+                <Text style={styles.itemTitle}>{item?.name}</Text>
                 <View style={styles.priceCaloriesContainer}>
                     <Text style={styles.itemCalories}>{item.calories}</Text>
                 </View>

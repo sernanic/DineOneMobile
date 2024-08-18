@@ -6,7 +6,7 @@ import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import LogoutButton from '@/components/auth/logoutButton'
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
     const navigation = useNavigation();
@@ -17,8 +17,8 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
         <View style={{flex:1}}>
             <DrawerContentScrollView {...props} scrollEnabled={false}>
                 <DrawerItemList {...props} />
-                <DrawerItem label={'Logout'} onPress={() => router.replace('/')} />
-
+                <DrawerItem label={'Logout'} onPress={() => router.navigate('/(tabs)/profile')} />
+                
             </DrawerContentScrollView>
             <View style={{
                 borderTopColor: 'red',
@@ -26,7 +26,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
                 padding: 20,
                 paddingBottom: 20 + bottom
             }}>
-                <Text style={{ color: 'blue' }}>Footer</Text>
+                <LogoutButton />
 
             </View>
         </View>

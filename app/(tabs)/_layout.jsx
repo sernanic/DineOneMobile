@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import Colors from '../../constants/Colors';
+import Colors from '@/constants/Colors';
 
 export default function TabLayout() {
   return (
@@ -52,6 +52,10 @@ export default function TabLayout() {
         }} />
         <Tabs.Screen name="[section]/[sectionItem]" options={{
             headerShown: false, title: 'Section Item',
+            tabBarButton: () => null
+        }} />
+        <Tabs.Screen name="profile" options={{
+            headerShown: false, title: 'profile',
             tabBarButton: () => null
         }} />
     </Tabs>

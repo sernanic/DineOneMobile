@@ -6,8 +6,8 @@ import { Button } from '@ui-kitten/components';
 import Colors from '@/constants/Colors';
 import CartItem from '@/components/cart/CartItem';
 import OrderTotalSummary from '@/components/cart/OrderTotalSUmmary';
-
-export default Cart = () => {
+import withAuth from '@/components/auth/withAuth';
+const Cart = () => {
     const handleExit = () => {
         router.push('/');
     };
@@ -64,3 +64,5 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
     },
 });
+
+export default withAuth(Cart);
