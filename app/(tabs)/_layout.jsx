@@ -51,7 +51,7 @@ export default function TabLayout() {
             tabBarButton: () => null
         }} />
         <Tabs.Screen name="[section]/[sectionItem]" options={{
-            headerShown: false, title: 'Section Item',
+            headerShown: false, title: 'Section Item', animation: 'slide_from_right',
             tabBarButton: () => null
         }} />
         <Tabs.Screen name="profile" options={{

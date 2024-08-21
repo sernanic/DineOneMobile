@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Animated, Button, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Animated, Button, Dimensions,SafeAreaView } from 'react-native';
 import Colors from "@/constants/Colors"
 import { useRouter } from 'expo-router';
 import Header from '@/components/menu/header';
-
+import CustomImageCarousal from '@/components/general/carousal/customImageCoursal'
 const { height } = Dimensions.get('window');
 
 const sections = [
@@ -39,10 +39,30 @@ const Menu = () => {
     }
   };
 
+
+  const data2 = [
+    {
+      image: require('../../assets/images/image-product-1-landscape.jpg'),
+    },
+    {
+      image: require('../../assets/images/image-product-1-landscape.jpg'),
+    },
+    {
+      image: require('../../assets/images/image-product-1-landscape.jpg'),
+    },
+    {
+      image: require('../../assets/images/image-product-1-landscape.jpg'),
+    },
+  ];
+
   return (
     <>
       <Header />
+      
       <ScrollView style={styles.container}>
+      <View style={styles.carouselContainer}>
+        <CustomImageCarousal data={data2} autoPlay={false} pagination={false} />
+      </View>
         {visible && (
           <Animated.View
             style={[
@@ -104,6 +124,11 @@ const styles = StyleSheet.create({
   },
   animatedView: {
     flex: 1,
+  },
+  text: {textAlign: 'center', color: 'black', marginBottom: 10},
+  carouselContainer: {
+    marginBottom: 20,
+    backgroundColor:'white'
   },
 });
 

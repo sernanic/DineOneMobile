@@ -2,14 +2,14 @@
 
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity,Dimensions } from 'react-native';
 import useCartStore from '../../store/cartStore';
 import { useRouter } from 'expo-router';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import BottomSheet from './SectionItemBottomSheet';
 import useProductStore from '@/store/selectedProductStore'
 import Colors from '@/constants/Colors';
-
+import {MotiView} from 'moti';
 
 
 interface SectionItemProps {
@@ -19,9 +19,10 @@ interface SectionItemProps {
         price: string;
         calories: string;
     };
+    index:number;
 }
 
-const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
+const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
     const { reduceProduct, addProduct, products } = useCartStore();
     const { setSelectedProduct } = useProductStore();
     const product = products[item.id];
@@ -35,7 +36,14 @@ const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
     };
 
     return (
+
         <TouchableOpacity style={styles.item} onPress={() => openModal(item)}>
+            <MotiView
+            key={item.id} 
+            style={styles.listContainer}
+            from={{opacity: 0, translateY: 50}}
+            animate={{opacity: 1, translateY: 0}}
+            transition={{delay: 500 + index * 200}}>
             <View style={styles.item}>
                 <BottomSheet ref={bottomSheetRef} />
 
@@ -44,7 +52,7 @@ const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
                     style={styles.itemImage}
                 />
 
-                <Text style={styles.itemTitle}>{item?.name}</Text>
+                <Text style={styles.itemTitle}>{item.name}</Text>
                 <View style={styles.priceCaloriesContainer}>
                     <Text style={styles.itemCalories}>{item.calories}</Text>
                 </View>
@@ -55,6 +63,7 @@ const SectionItem: React.FC<SectionItemProps> = ({ item }) => {
                     <Ionicons name='add' size={24} color={'#fff'} />
                 </View>
             </View>
+            </MotiView>
         </TouchableOpacity>
     );
 };
@@ -160,7 +169,12 @@ const styles = StyleSheet.create({
     },
     priceText: {
         fontWeight: '500'
-    }
+    },
+    listContainer: {
+        width: Dimensions.get('window').width / 2 - 20,
+        margin: 10,
+        borderRadius: 20,
+      },
 });
 
 export default SectionItem;

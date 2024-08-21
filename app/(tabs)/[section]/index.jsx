@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Dimensions,TouchableWithoutFeedback } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Header from '@/components/section/SectionHeader';
 import items from '@/data/foodItems';
@@ -8,6 +8,10 @@ import SectionItem from '@/components/section/sectionItem';
 import SearchInput from '@/components/general/SearchInput';
 import HorizontalSubsectionList from '@/components/section/HorizontalSubsectionList';
 import Colors from '@/constants/Colors';
+
+
+import {MotiView} from 'moti';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const { height } = Dimensions.get('window');
 
@@ -106,11 +110,12 @@ const Section = () => {
                 data={pairs}
                 contentContainerStyle={{ paddingBottom: 350 }}
                 keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
                     <View style={styles.row}>
                         {item.map((subItem, subIndex) => (
                             <View style={styles.item} key={subIndex}>
-                                <SectionItem item={subItem} />
+                                <SectionItem item={subItem} index={subIndex}/>
                             </View>
                         ))}
                     </View>

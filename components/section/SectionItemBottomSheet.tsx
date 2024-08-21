@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView,useWindowDimensions } from 'react-native';
 import React, { forwardRef, useCallback, useLayoutEffect, useMemo } from 'react';
 import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import Colors from '@/constants/Colors';
@@ -8,6 +8,8 @@ import useProductStore from '@/store/selectedProductStore';
 import { Button, Text } from '@ui-kitten/components';
 import useCartStore from '@/store/cartStore';
 import FullWidthImage from './SectionImage'
+import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated';
+
 
 export type Ref = BottomSheetModal;
 
@@ -22,7 +24,7 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
     const product = productId ? products[productId] : undefined;
     const quantity = product ? product.quantity : 1;
     const navigation = useNavigation();
-
+    const {width} = useWindowDimensions();
     const handleCloseModal = () => {
         dismiss();
     };
@@ -38,12 +40,23 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
                 {selectedProduct ? (
                     <View style={styles.container}>
                         <View style={styles.detailsContainer}>
-                            <FullWidthImage source={require('@/assets/images/react-logo.png')} onBackPress={handleCloseModal}/>
-
+                            {/* <FullWidthImage source={require('@/assets/images/react-logo.png')} onBackPress={handleCloseModal}/> */}
+                            <View>
+                            <Animated.Image
+                                sharedTransitionTag={selectedProduct.name}
+                                source={require('@/assets/images/react-logo.png')}
+                                style={{width: width, height: width}}
+                            />
+                            <Animated.View
+                                style={styles.textContainer}
+                                entering={FadeIn.delay(400)}>
+                                <Text style={styles.textName}>{selectedProduct.name}</Text>
+                            </Animated.View>
+                            </View>
                             <View style={{flexDirection:'row',justifyContent:"space-between",padding:20}}>
                                 <View>
                                     {/* TODO: Add Title Styling */}
-                                    <View><Text style={styles.itemName}>{selectedProduct.name}</Text></View>
+                                    <View><Text style={styles.itemName}></Text></View>
                                     {/*TODO: Add pricing Styling */}
                                     <View><Text style={styles.itemPrice}>{selectedProduct.price}</Text></View>
                                 </View>
@@ -60,8 +73,10 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
                                 </View>
                             </View>
                             {/*TODO: Add Title Styling */}
+                            <Animated.View entering={FadeInDown.delay(600)}>
                             <Text style={styles.itemDescriptionTitle}>About the food</Text>
                             <Text style={styles.itemDescription}>{selectedProduct.description}</Text>
+                            </Animated.View>
                       </View>
                         <View style={styles.buttonContainer}>
                             <Button style={styles.addCartButton} onPress={() => addProduct(selectedProduct)}>Add To Cart</Button>
@@ -152,7 +167,21 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         paddingBottom:15,
         color:Colors.primary
-    }
+    },
+    textContainer: {
+        position: 'absolute',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        bottom: 10,
+        left: 10,
+        right: 10,
+        padding: 16,
+        borderRadius: 20,
+      },
+      textName: {
+        color: 'white',
+        fontSize: 24,
+        fontWeight: 'bold',
+      },
 });
 
 export default BottomSheet;
