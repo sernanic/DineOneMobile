@@ -42,10 +42,10 @@ const Rewards: React.FC = () => {
     openModal();
   }
 
-  let points = 10;
+  let points = 100;
 
   // Render item function for FlatList
-  const renderItem: ListRenderItem<FoodReward> = ({ item }) => <RewardItem item={item}  />;
+  const renderItem: ListRenderItem<FoodReward> = ({ item }) => <RewardItem item={item} currentPoints={points}  />;
 
   return (
     <View>
@@ -62,11 +62,15 @@ const Rewards: React.FC = () => {
           <Text style={{ fontSize: 24, fontWeight: '700' }}>{points} POINTS</Text>
         </View>
       </View>
-      <View style={{ marginTop: 10, height: 630 }}>
+      <Text style={{ fontSize: 24, fontWeight: '700', marginLeft: 15, marginTop: 20 }}>
+        Redeem
+      </Text>
+      <View style={{ margin: 15, height: 630 }}>
         <FlatList
           data={foodRewards}
-          keyExtractor={(item) => item.title} // Assuming title is unique; adjust if needed
+          keyExtractor={(item) => item.title}
           renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     </View>

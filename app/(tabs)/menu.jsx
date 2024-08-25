@@ -19,30 +19,6 @@ const sections = [
 
 const Menu = () => {
   const router = useRouter();
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const [visible, setVisible] = useState(true);
-
-  
-  const toggleMenu = () => {
-    if (visible) {
-      // Slide down to hide
-      Animated.timing(slideAnim, {
-        toValue: height,
-        duration: 500,
-        useNativeDriver: true,
-      }).start(() => setVisible(false));
-    } else {
-      // Reset position and slide up to show
-      slideAnim.setValue(height);
-      setVisible(true);
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    }
-  };
-
 
   const data2 = [
     {
@@ -130,7 +106,7 @@ const styles = StyleSheet.create({
   },
   text: {textAlign: 'center', color: 'black', marginBottom: 10},
   carouselContainer: {
-    marginBottom: 20,
+    marginBottom: 0,
     backgroundColor:'#f2f2f2',
     paddingTop:20
   },

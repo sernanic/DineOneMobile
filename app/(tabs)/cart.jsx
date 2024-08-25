@@ -34,31 +34,37 @@ const Cart = () => {
 
     const renderItem = ({ item }) => <CartItem item={item} />;
     const screenHeight = Dimensions.get('window').height;
-    const listHeight = '60%'; // Adjust as needed
+    const listHeight = '57%'; // Adjust as needed
     const totalInfoHeight = screenHeight * 0.35;
 
     return (
         <View style={styles.container}>
             <Header title="Cart" handleExit={handleExit} />
             <View style={[styles.listContainer, { height: listHeight }]}>
-                <FlatList
-                    data={Object.values(products)}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString()}
-                    contentContainerStyle={styles.listContent}
-                />
+                {Object.keys(products).length === 0 ? (
+                    <Text style={styles.emptyCartText}>No items in cart</Text>
+                ) : (
+                    <FlatList
+                        data={Object.values(products)}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id.toString()}
+                        contentContainerStyle={styles.listContent}
+                    />
+                )}
                 <View style={styles.blurEffect} />
             </View>
-            <View style={{ height: totalInfoHeight, backgroundColor: 'white' }}>
+            <View style={{ height: totalInfoHeight, backgroundColor: 'white',marginBottom:10 }}>
                 <OrderTotalSummary
                     subtotal={totalPrice} // Pass the updated totalPrice
                     taxesAndFees={10.00} // TODO: change this to dynamic info
                     deliveryFee={5.00} // TODO: change this to dynamic info
                 />
-                <View style={{ backgroundColor: Colors.primary, width: '100%',height:100,flex:1,padding:10 }}>
+                <View style={{paddingLeft:10,paddingRight:10}}>
+                <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button}>
                         <Text style={styles.buttonText}>Checkout</Text>
                     </TouchableOpacity>
+                </View>
                 </View>
             </View>
             
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Adjust opacity as needed
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
     },
     button: {
         paddingVertical: 10,
@@ -92,10 +98,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonText: {
-        color: '#FFFFFF', // Text color
+        color: '#FFFFFF',
         fontSize: 16,
-        fontWeight: '600', // Set font weight to 700 (bold)
+        fontWeight: '600', 
     },
+    buttonContainer:
+    {
+        backgroundColor: Colors.primary,
+        width: '100%',
+        height:50,
+        borderRadius:10,
+        marginTop:15,
+    },
+    emptyCartText: {
+        textAlign: 'center',
+        marginTop: 20,
+        fontSize: 18,
+        color: 'gray',
+    }
 });
 
 export default withAuth(Cart);

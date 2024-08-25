@@ -21,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ title, }) => {
   const {items} = useCartStore()
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#f2f2f2' }}>
+    <SafeAreaView style={{ backgroundColor: 'transparent' }}>
       <BottomSheet ref={bottomSheetRef} />
       <View style={styles.header}>
         <TouchableOpacity style={styles.touchableArea} onPress={() => {
