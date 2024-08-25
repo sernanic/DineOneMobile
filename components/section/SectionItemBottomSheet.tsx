@@ -1,11 +1,10 @@
-import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView,useWindowDimensions } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView,useWindowDimensions,Button, Text } from 'react-native';
 import React, { forwardRef, useCallback, useLayoutEffect, useMemo } from 'react';
 import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import Colors from '@/constants/Colors';
 import { useNavigation } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import useProductStore from '@/store/selectedProductStore';
-import { Button, Text } from '@ui-kitten/components';
 import useCartStore from '@/store/cartStore';
 import FullWidthImage from './SectionImage'
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated';
@@ -78,8 +77,8 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
                             <Text style={styles.itemDescription}>{selectedProduct.description}</Text>
                             </Animated.View>
                       </View>
-                        <View style={styles.buttonContainer}>
-                            <Button style={styles.addCartButton} onPress={() => addProduct(selectedProduct)}>Add To Cart</Button>
+                        <View style={[styles.buttonContainer,styles.addCartButton]}>
+                            <Button  onPress={() => addProduct(selectedProduct)} title='Add To Cart'/>
                         </View>
                     </View>
                 ) : (

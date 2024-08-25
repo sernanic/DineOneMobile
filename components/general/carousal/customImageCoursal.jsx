@@ -19,7 +19,7 @@ const CustomImageCarousal = ({data, autoPlay, pagination}) => {
     {key: 'spacer-right'},
   ]);
   const {width} = useWindowDimensions();
-  const SIZE = width * 0.7;
+  const SIZE = width * 0.9;
   const SPACER = (width - SIZE) / 2;
   const x = useSharedValue(0);
   const offSet = useSharedValue(0);
@@ -48,7 +48,7 @@ const CustomImageCarousal = ({data, autoPlay, pagination}) => {
           _offSet = Math.floor(_offSet + SIZE);
         }
         scrollViewRef.current.scrollTo({x: _offSet, y: 0});
-      }, 2000);
+      }, 5000);
     } else {
       clearInterval(interval.current);
     }

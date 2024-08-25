@@ -5,6 +5,8 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import BottomSheet from '../location/LocationBottomSheet';
 import { useNavigation } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
+import useCartStore from '@/store/cartStore';
+
 
 interface HeaderProps {
   title: string;
@@ -12,13 +14,14 @@ interface HeaderProps {
   handleAddToCart: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, cartItemsCount, handleAddToCart }) => {
+const Header: React.FC<HeaderProps> = ({ title, }) => {
   
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
+  const {items} = useCartStore()
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#fff' }}>
+    <SafeAreaView style={{ backgroundColor: '#f2f2f2' }}>
       <BottomSheet ref={bottomSheetRef} />
       <View style={styles.header}>
         <TouchableOpacity style={styles.touchableArea} onPress={() => {
@@ -26,11 +29,11 @@ const Header: React.FC<HeaderProps> = ({ title, cartItemsCount, handleAddToCart 
         }}>
           <Ionicons name="menu" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleAddToCart} style={styles.touchableArea}>
+        <TouchableOpacity  style={styles.touchableArea}>
           <Ionicons name="bag" size={24} color="black" />
-          {cartItemsCount > 0 && (
+          {items > 0 && (
             <View style={styles.notificationBubble}>
-              <Text style={styles.notificationText}>{cartItemsCount}</Text>
+              <Text style={styles.notificationText}>{items}</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 15,
     paddingTop: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#f2f2f2',
     elevation: 4,
   },
   touchableArea: {

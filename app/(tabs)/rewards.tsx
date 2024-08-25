@@ -1,8 +1,8 @@
 import { View, Text, Image, StyleSheet, FlatList, ListRenderItem } from 'react-native';
 import React, { useRef } from 'react';
-import Header from '../../components/rewards/RewardsHeader';
+import Header from '@/components/home/header';
 import foodRewards from '@/data/foodRewards';
-import RewardItem from '../../components/rewards/RewardItemCard';
+import RewardItem from '@/components/rewards/RewardItemCard';
 import { useRouter } from 'expo-router';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useAuthStore } from '@/store/authStore';
@@ -38,8 +38,6 @@ const Rewards: React.FC = () => {
     bottomSheetRef.current?.present();
   };
 
-  console.log("this is rewards",session);
-
   if (session == null) {
     openModal();
   }
@@ -51,7 +49,7 @@ const Rewards: React.FC = () => {
 
   return (
     <View>
-      <Header title="Rewards" handleExit={handleExit} />
+      <Header  />
       <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', marginTop: 15 }}>
         <Image
           source={{ uri: 'https://via.placeholder.com/80' }} // Replace with actual image source

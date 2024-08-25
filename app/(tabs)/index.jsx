@@ -1,17 +1,15 @@
 import React from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity,Image } from 'react-native';
-import Header from '../../components/home/header';
+import Header from '@/components/home/header';
 import { useRouter } from 'expo-router';
-import useCartStore from '../../store/cartStore';
 
 
 const Home = () => {
   const router = useRouter();
-  const {items} = useCartStore()
 
   return (
     <>
-    <Header title={"test"} cartItemsCount={items}  />
+    <Header title={"test"}  />
     <View style={styles.itemContainer}>
           <Text style={styles.sectionText}></Text>
         </View>

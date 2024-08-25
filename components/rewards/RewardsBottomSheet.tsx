@@ -1,8 +1,7 @@
-import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, SafeAreaView,Button, Text } from 'react-native';
 import React, { forwardRef, useCallback, useLayoutEffect, useMemo } from 'react';
 import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import Colors from '@/constants/Colors';
-import { Button, Text } from '@ui-kitten/components';
 import FullWidthImage from '@/components/section/SectionImage'
 import Animated, { useSharedValue } from 'react-native-reanimated';
 
@@ -62,7 +61,7 @@ const BottomSheet = forwardRef<Ref, { rewardItem: RewardItemType }>((props, ref)
                             <Text style={styles.itemDescription}>{rewardItem.description}</Text>
                         </View>
                         <View style={styles.buttonContainer}>
-                            <Button style={styles.addCartButton} >Reedem</Button>
+                            <Button  title='Redeem'></Button>
                         </View>
                     </View>
                 ) : (

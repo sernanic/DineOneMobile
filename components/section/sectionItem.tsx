@@ -37,7 +37,7 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
 
     return (
 
-        <TouchableOpacity style={styles.item} onPress={() => openModal(item)}>
+        <TouchableOpacity  onPress={() => openModal(item)}>
             <MotiView
             key={item.id} 
             style={styles.listContainer}
@@ -45,22 +45,23 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
             animate={{opacity: 1, translateY: 0}}
             transition={{delay: 500 + index * 200}}>
             <View style={styles.item}>
-                <BottomSheet ref={bottomSheetRef} />
+                <View style={{flex:1,flexDirection:'column',width:"100%",alignItems: 'center',}}>
+                    <BottomSheet ref={bottomSheetRef} />
 
-                <Image
-                    source={require('@/assets/images/react-logo.png')} // Replace with your image source
-                    style={styles.itemImage}
-                />
-
-                <Text style={styles.itemTitle}>{item.name}</Text>
-                <View style={styles.priceCaloriesContainer}>
-                    <Text style={styles.itemCalories}>{item.calories}</Text>
+                    <Image
+                        source={require('@/assets/images/image-product-1-landscape.jpg')} // Replace with your image source
+                        style={styles.itemImage}
+                    />
+                    <Text style={styles.itemTitle}>{item?.name.length > 30 ? `${item?.name.substring(0, 30)}...` : item?.name}</Text>
+                    <View style={styles.priceCaloriesContainer}>
+                        <Text style={styles.itemCalories}>{item.calories}</Text>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.buttonContainer}>
-                <Text style={styles.priceText}>${item.price}</Text>
-                <View style={styles.addContainer}>
-                    <Ionicons name='add' size={24} color={'#fff'} />
+                <View style={styles.buttonContainer}>
+                    <Text style={styles.priceText}>${item.price}</Text>
+                    <View style={styles.addContainer}>
+                        <Ionicons name='add' size={24} color={'#fff'} />
+                    </View>
                 </View>
             </View>
             </MotiView>
@@ -111,17 +112,28 @@ const styles = StyleSheet.create({
     item: {
         flexDirection: 'column',
         alignItems: 'center',
+        height:220,
         justifyContent: 'space-between',
         margin: 10,
-        backgroundColor: "#F7F7F7",
+        backgroundColor: "#ffff",
         borderRadius: 15,
         width: 180,
-        // height:150,
+        shadowColor: 'rgba(0, 0, 0, 0.5)',
+        shadowOffset: {
+        width: 0,
+        height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.41,
+        elevation: 2,
     },
     itemImage: {
-        width: 100,
+        width: '100%',
         height: 100,
         resizeMode: 'cover',
+        borderTopLeftRadius:8,
+        borderTopRightRadius:8,
+        position:'relative',
     },
     itemTextContainer: {
         marginLeft: 10,
@@ -130,6 +142,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         paddingBottom: 10,
+        marginTop:10
     },
     itemPrice: {
         fontSize: 14,

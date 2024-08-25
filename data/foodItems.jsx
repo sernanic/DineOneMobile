@@ -2,7 +2,7 @@ const items = {
   drinks: [
     { id: 1, name: 'Coke', price: '1.50', calories: '150 kcal', description: 'Classic cola with a refreshing, fizzy taste.', subsectionId: 1 },
     { id: 2, name: 'Pepsi', price: '1.50', calories: '150 kcal', description: 'Popular cola with a slightly sweeter flavor than other brands.', subsectionId: 1 },
-    { id: 3, name: 'Lemonade', price: '2.00', calories: '120 kcal', description: 'Tangy and sweet lemonade made with real lemons.', subsectionId: 2 },
+    { id: 3, name: 'Lemonade Lemonade Lemonade Lemonade Lemonade', price: '2.00', calories: '120 kcal', description: 'Tangy and sweet lemonade made with real lemons.', subsectionId: 2 },
     { id: 4, name: 'Iced Tea', price: '2.00', calories: '80 kcal', description: 'Chilled tea with a hint of lemon, served over ice.', subsectionId: 3 },
     { id: 5, name: 'Orange Juice', price: '2.50', calories: '110 kcal', description: 'Freshly squeezed orange juice with a sweet, citrus flavor.', subsectionId: 2 },
     { id: 6, name: 'Apple Juice', price: '2.50', calories: '120 kcal', description: 'Sweet and crisp apple juice made from premium apples.', subsectionId: 2 },

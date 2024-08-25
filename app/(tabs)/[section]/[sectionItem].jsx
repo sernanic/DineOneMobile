@@ -1,10 +1,9 @@
 import React, { useEffect, useLayoutEffect } from 'react';
-import { View,  StyleSheet, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import { View,  StyleSheet, TouchableOpacity, SafeAreaView, Image,Button,Text } from 'react-native';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import ParallaxScrollView from '@/components/parallaxScrollView';
 import Colors from '@/constants/Colors';
-import {  Button, Divider, Text } from '@ui-kitten/components';
 import useCartStore from '@/store/cartStore';
 
 
@@ -51,12 +50,11 @@ const SectionItemScreen = () =>
                         <Text style={styles.stickySectionText}>{item.price}</Text>
 
                         </View>
-                    <Divider/>
                     <Text style={styles.itemDescription}>{item.description}</Text>
                 </View>
             </ParallaxScrollView>
             <View style={styles.buttonContainer}>
-                <Button onPress={()=>addProduct(item)}>Add To Cart</Button>
+                <Button onPress={()=>addProduct(item)} title="Add Cart"/>
             </View>
         </View>
     );

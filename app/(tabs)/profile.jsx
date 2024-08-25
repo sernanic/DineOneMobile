@@ -4,7 +4,7 @@ import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { useAuthStore } from '@/store/authStore';
 import withAuth from '@/components/auth/withAuth';
-
+import Header from '@/components/home/header';
 
 const Profile = () =>{
   const [loading, setLoading] = useState(true)
@@ -81,6 +81,8 @@ const Profile = () =>{
   }
 
   return (
+    <>
+    <Header title="Profile" />
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input label="Email" value={session?.user?.email} disabled />
@@ -104,6 +106,7 @@ const Profile = () =>{
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
       </View>
     </View>
+    </>
   )
 }
 

@@ -93,19 +93,19 @@ const Section = () => {
     };
 
     return (
-        <View style={{ padding: 5, backgroundColor: '#fff' }}>
+        <View style={{ padding: 5, backgroundColor: '#f2f2f2' }}>
             <Header title={section} handleExit={handleExit} />
             {/* TODO: make name Dynamic */}
             <Text style={styles.profileNameStyle}>Hi Nicolas</Text>
             <Text style={styles.FindYourFoodStyle}>Find Your Food</Text>
             <SearchInput searchValue={searchText}
                 onSearchChange={setSearchText} isShowFilterIcon={true} />
-
             <HorizontalSubsectionList
                 subsections={subSections}
                 onSelectSubsection={setSelectedSubsection}
             />
-            
+                    
+
             <FlatList
                 data={pairs}
                 contentContainerStyle={{ paddingBottom: 350 }}
@@ -128,14 +128,16 @@ const Section = () => {
 const styles = StyleSheet.create({
     item: {
         flexDirection: 'row',
-        alignItems: 'center',
         margin: 0,
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center'
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingLeft: 10,
-        paddingRight: 20
+        justifyContent: 'space-around',
+        alignItems: 'stretch',
+
     },
     FindYourFoodStyle: {
         fontSize: 24,

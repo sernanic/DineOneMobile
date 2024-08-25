@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     paddingBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: '#f2f2f2',
     elevation: 4,
   },
   backButton: {

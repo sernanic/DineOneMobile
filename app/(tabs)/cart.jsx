@@ -1,22 +1,41 @@
-import { View, Dimensions,FlatList,StyleSheet } from 'react-native'
-import React from 'react'
-import Header from '@/components/cart/CartHeader';
+import { View, Dimensions,FlatList,StyleSheet,TouchableOpacity,Text } from 'react-native'
+import React,{useState,useEffect} from 'react'
+import Header from '@/components/home/header';
 import useCartStore from '@/store/cartStore';
-import { Button } from '@ui-kitten/components';
 import Colors from '@/constants/Colors';
 import CartItem from '@/components/cart/CartItem';
 import OrderTotalSummary from '@/components/cart/OrderTotalSUmmary';
 import withAuth from '@/components/auth/withAuth';
 const Cart = () => {
+    const { products } = useCartStore();
+    const [totalPrice, setTotalPrice] = useState(0);
+
+    useEffect(() => {
+        // Function to calculate the total price
+        const calculateTotalPrice = (items) => {
+            let total = 0;
+            for (let key in items) {
+                if (items.hasOwnProperty(key)) {
+                    const item = items[key];
+                    const itemTotal = parseFloat(item.price) * parseInt(item.quantity);
+                    total += itemTotal;
+                }
+            }
+            return total.toFixed(2); // Return total as a string with 2 decimal places
+        };
+
+        // Update totalPrice state whenever products change
+        setTotalPrice(calculateTotalPrice(products));
+    }, [products]);
+
     const handleExit = () => {
         router.push('/');
     };
-    const { reduceProduct, addProduct, products } = useCartStore();
+
     const renderItem = ({ item }) => <CartItem item={item} />;
     const screenHeight = Dimensions.get('window').height;
-    const listHeight = screenHeight * 0.4; // Adjust as needed
+    const listHeight = '60%'; // Adjust as needed
     const totalInfoHeight = screenHeight * 0.35;
-    const { subtotal } = useCartStore();
 
     return (
         <View style={styles.container}>
@@ -30,17 +49,23 @@ const Cart = () => {
                 />
                 <View style={styles.blurEffect} />
             </View>
-            <View style={{height:totalInfoHeight,backgroundColor:'white'}}>
-            <OrderTotalSummary
-                subtotal={subtotal}
-                taxesAndFees={10.00} // TODO: change this to dynamic info
-                deliveryFee={5.00} // TODO: change this to dynamic info
+            <View style={{ height: totalInfoHeight, backgroundColor: 'white' }}>
+                <OrderTotalSummary
+                    subtotal={totalPrice} // Pass the updated totalPrice
+                    taxesAndFees={10.00} // TODO: change this to dynamic info
+                    deliveryFee={5.00} // TODO: change this to dynamic info
                 />
+                <View style={{ backgroundColor: Colors.primary, width: '100%',height:100,flex:1,padding:10 }}>
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.buttonText}>Checkout</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <Button style={styles.button}>Checkout</Button>
+            
         </View>
-    )
-}
+    );
+};
+
 
 const styles = StyleSheet.create({
     container: {
@@ -61,7 +86,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.8)', // Adjust opacity as needed
     },
     button: {
-        backgroundColor: Colors.primary,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#FFFFFF', // Text color
+        fontSize: 16,
+        fontWeight: '600', // Set font weight to 700 (bold)
     },
 });
 

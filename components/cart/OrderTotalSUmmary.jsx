@@ -1,14 +1,19 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const OrderTotalSummary = ({ subtotal, taxesAndFees, deliveryFee }) => {
-  const total = (subtotal + taxesAndFees + deliveryFee).toFixed(2);
+const OrderTotalSummary = ({ subtotal = 0, taxesAndFees = 0, deliveryFee = 0 }) => {
+    const numericSubtotal = parseFloat(subtotal) || 0;
+    const numericTaxesAndFees = parseFloat(taxesAndFees) || 0;
+    const numericDeliveryFee = parseFloat(deliveryFee) || 0;
+
+    // Calculate total
+    const total = (numericSubtotal + numericTaxesAndFees + numericDeliveryFee).toFixed(2);
 
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.label}>Sub total</Text>
-        <Text style={styles.amount}>${subtotal.toFixed(2)}</Text>
+        <Text style={styles.label}>Subtotal</Text>
+        <Text style={styles.amount}>${numericSubtotal.toFixed(2)}</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Taxes & Fees</Text>
@@ -30,9 +35,9 @@ const OrderTotalSummary = ({ subtotal, taxesAndFees, deliveryFee }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     borderRadius: 8,
-    shadowColor: '#000',
+    // shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,

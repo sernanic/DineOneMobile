@@ -22,7 +22,7 @@ const CartItem = ({ item }) => {
                     />
                     <View style={styles.productInfo}>
                         <Text style={styles.productName}>{item.name}</Text>
-                        <Text style={styles.price}>{item.price}</Text>
+                        <Text style={styles.price}>${item.price}</Text>
                         <View style={styles.quantityContent}>
                             <TouchableOpacity onPress={handleDecrement} style={styles.button}>
                                 <Text style={styles.buttonText}>-</Text>
@@ -74,9 +74,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     image: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 80,
+        height: 80,
+        borderRadius: 10,
         marginRight: 16,
     },
     productInfo: {
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     productName: {
         fontSize: 16,
         fontWeight: '600',
+        width: "70%"
     },
     price: {
         fontSize: 14,

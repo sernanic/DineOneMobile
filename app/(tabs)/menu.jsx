@@ -2,8 +2,12 @@ import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Animated, Button, Dimensions,SafeAreaView } from 'react-native';
 import Colors from "@/constants/Colors"
 import { useRouter } from 'expo-router';
-import Header from '@/components/menu/header';
+import Header from '@/components/home/header';
+import { Surface } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
+
 import CustomImageCarousal from '@/components/general/carousal/customImageCoursal'
+
 const { height } = Dimensions.get('window');
 
 const sections = [
@@ -56,23 +60,15 @@ const Menu = () => {
   ];
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <Header />
       
-      <ScrollView style={styles.container}>
+      <ScrollView style={[styles.container]} showsVerticalScrollIndicator={false}>
+      <Text style={{marginLeft:'8%',fontSize:'24px',fontWeight:'700'}}>Featured</Text>
       <View style={styles.carouselContainer}>
-        <CustomImageCarousal data={data2} autoPlay={false} pagination={false} />
+        <CustomImageCarousal data={data2} autoPlay={true} pagination={true} />
       </View>
-        {visible && (
-          <Animated.View
-            style={[
-              styles.animatedView,
-              {
-                transform: [{ translateY: slideAnim }],
-              },
-            ]}
-          >
-            {sections.map((section, index) => (
+      {sections.map((section, index) => (
               <TouchableOpacity
                 key={index}
                 style={styles.item}
@@ -81,23 +77,24 @@ const Menu = () => {
                   params: { section: section.section.toLowerCase() }
                 })}
               >
-                <View key={index} style={styles.itemContainer}>
-                  <Image source={section.image} style={styles.image} />
-                  <Text style={styles.sectionText}>{section.section}</Text>
+                <View key={index}>
+                  <Surface style={styles.itemContainer} elevation={1}>
+                    <Image source={require('../../assets/images/image-product-1-landscape.jpg')} style={styles.image} />
+                    <Text style={styles.sectionText}>{section.section}</Text>
+                  </Surface>
                 </View>
               </TouchableOpacity>
             ))}
-          </Animated.View>
-        )}
       </ScrollView>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f2f2f2',
+    marginTop:10
   },
   item: {
     padding: 5,
@@ -110,17 +107,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 5,
+    backgroundColor:'white',
+    borderRadius:8,
+    width:'99%',
+    position: 'relative',
   },
   image: {
     width: 100,
     height: 100,
     resizeMode: 'cover',
     marginRight: 20,
+    borderRadius:4
   },
   sectionText: {
-    fontSize: 16,
+    fontSize: 24,
     marginLeft: 10,
     color: "black",
+    fontWeight:'600'
   },
   animatedView: {
     flex: 1,
@@ -128,8 +131,10 @@ const styles = StyleSheet.create({
   text: {textAlign: 'center', color: 'black', marginBottom: 10},
   carouselContainer: {
     marginBottom: 20,
-    backgroundColor:'white'
+    backgroundColor:'#f2f2f2',
+    paddingTop:20
   },
+
 });
 
 export default Menu;

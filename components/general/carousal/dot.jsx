@@ -5,6 +5,7 @@ import Animated, {
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated';
+import Colors from '../../../constants/Colors';
 
 const Dot = ({x, index, size}) => {
   const animatedDotStyle = useAnimatedStyle(() => {
@@ -32,8 +33,8 @@ export default Dot;
 
 const styles = StyleSheet.create({
   dots: {
-    height: 10,
-    backgroundColor: 'orange',
+    height: 5,
+    backgroundColor: Colors.primary,
     marginHorizontal: 10,
     borderRadius: 5,
   },
