@@ -33,10 +33,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 10,
         paddingVertical: 8,
-        backgroundColor:'#EEF9EB', //TODO: change to color constants
         marginLeft:15,
         marginRight:15,
-        height:55
+        height:55,
+        borderRadius: 16,
+        borderWidth: 2,
+        borderColor: '#E6EBF2',  
+        backgroundColor: '#FFFFFF'
       },
     input: {
         flex: 1,

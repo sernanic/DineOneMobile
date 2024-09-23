@@ -93,7 +93,7 @@ const Section = () => {
     };
 
     return (
-        <View style={{ padding: 5, backgroundColor: '#f2f2f2' }}>
+        <View style={{ padding: 5, backgroundColor: '#fff' }}>
             <Header title={section} handleExit={handleExit} />
             {/* TODO: make name Dynamic */}
             <Text style={styles.profileNameStyle}>Hi Nicolas</Text>

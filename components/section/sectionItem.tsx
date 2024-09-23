@@ -53,15 +53,12 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
                         style={styles.itemImage}
                     />
                     <Text style={styles.itemTitle}>{item?.name.length > 30 ? `${item?.name.substring(0, 30)}...` : item?.name}</Text>
-                    <View style={styles.priceCaloriesContainer}>
-                        <Text style={styles.itemCalories}>{item.calories}</Text>
-                    </View>
                 </View>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.priceText}>${item.price}</Text>
-                    <View style={styles.addContainer}>
+                    {/* <View style={styles.addContainer}>
                         <Ionicons name='add' size={24} color={'#fff'} />
-                    </View>
+                    </View> */}
                 </View>
             </View>
             </MotiView>
@@ -112,28 +109,33 @@ const styles = StyleSheet.create({
     item: {
         flexDirection: 'column',
         alignItems: 'center',
-        height:220,
+        height: 198,
         justifyContent: 'space-between',
         margin: 10,
-        backgroundColor: "#ffff",
-        borderRadius: 15,
-        width: 180,
-        shadowColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: "#FFF",
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#FBFBFB',
+        width: 175,
+        shadowColor: 'rgba(6, 51, 54, 0.10)',
         shadowOffset: {
-        width: 0,
-        height: 1,
+            width: 0,
+            height: 2,
         },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-        elevation: 2,
+        shadowOpacity: 1,
+        shadowRadius: 16,
+        elevation: 5, // for Android
     },
     itemImage: {
-        width: '100%',
-        height: 100,
         resizeMode: 'cover',
-        borderTopLeftRadius:8,
-        borderTopRightRadius:8,
         position:'relative',
+        borderRadius:16,
+        width: '85%',
+        height: 82,
+        marginTop:12,
+        flexShrink:0
+        
+        
     },
     itemTextContainer: {
         marginLeft: 10,
@@ -142,7 +144,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         paddingBottom: 10,
-        marginTop:10
+        marginTop:10,
+        fontFamily:'sofia-pro',
+        width:'100%',
+        paddingLeft:12
     },
     itemPrice: {
         fontSize: 14,
@@ -181,7 +186,15 @@ const styles = StyleSheet.create({
         padding: 5
     },
     priceText: {
-        fontWeight: '500'
+      
+        color: '#97A2B0',  // Equivalent to var(--Neutral-Grey-2)
+        fontFamily: 'Sofia Pro',  // Make sure this font is correctly installed and linked
+        fontSize: 14,
+        fontStyle: 'normal',
+        fontWeight: '400',
+        lineHeight: 20.3,  // Since line-height is in px, use the exact value
+        marginBottom:12
+        
     },
     listContainer: {
         width: Dimensions.get('window').width / 2 - 20,
