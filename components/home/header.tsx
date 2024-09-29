@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 15,
     paddingTop: 5,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#fff',
     elevation: 4,
   },
   touchableArea: {

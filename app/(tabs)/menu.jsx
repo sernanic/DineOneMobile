@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import Header from '@/components/home/header';
 import { Surface } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 import CustomImageCarousal from '@/components/general/carousal/customImageCoursal'
 
@@ -36,14 +37,15 @@ const Menu = () => {
   ];
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor:'#fff'}}>
       <Header />
       
       <ScrollView style={[styles.container]} showsVerticalScrollIndicator={false}>
-      <Text style={{marginLeft:'8%',fontSize:'24px',fontWeight:'700'}}>Featured</Text>
+      <Text style={{marginLeft:'8%',fontSize:'20px',fontWeight:'700'}}>Featured</Text>
       <View style={styles.carouselContainer}>
         <CustomImageCarousal data={data2} autoPlay={true} pagination={true} />
       </View>
+      <Text style={{marginLeft:'8%',fontSize:'20px',fontWeight:'700',marginBottom:10}}>Categories</Text>
       {sections.map((section, index) => (
               <TouchableOpacity
                 key={index}
@@ -53,11 +55,12 @@ const Menu = () => {
                   params: { section: section.section.toLowerCase() }
                 })}
               >
-                <View key={index}>
-                  <Surface style={styles.itemContainer} elevation={1}>
+                <View key={index} style={styles.itemContainer}>
                     <Image source={require('../../assets/images/image-product-1-landscape.jpg')} style={styles.image} />
                     <Text style={styles.sectionText}>{section.section}</Text>
-                  </Surface>
+                    <View style={styles.arrowContainer}>
+                    <AntDesign name="arrowright" size={16} color="white" />
+                    </View>
                 </View>
               </TouchableOpacity>
             ))}
@@ -69,12 +72,13 @@ const Menu = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
-    marginTop:10
+    backgroundColor: '#fff',
+    marginTop: 10
   },
   item: {
     padding: 5,
     paddingLeft: 15,
+    marginBottom: 5, // Added margin bottom for more spacing between rows
   },
   text: {
     fontSize: 18,
@@ -83,17 +87,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 5,
-    backgroundColor:'white',
-    borderRadius:8,
-    width:'99%',
+    backgroundColor: 'white',
+    borderRadius: 8,
+    width: '98%',
     position: 'relative',
+    // iOS shadow
+    shadowColor: 'rgba(6, 51, 54, 0.10)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 16,
+    // Android elevation
+    elevation: 5,
+    height:100
   },
   image: {
     width: 100,
-    height: 100,
+    height: 84,
     resizeMode: 'cover',
     marginRight: 20,
-    borderRadius:4
+    borderRadius:16
   },
   sectionText: {
     fontSize: 24,
@@ -107,10 +119,21 @@ const styles = StyleSheet.create({
   text: {textAlign: 'center', color: 'black', marginBottom: 10},
   carouselContainer: {
     marginBottom: 0,
-    backgroundColor:'#f2f2f2',
+    backgroundColor:'#fff',
     paddingTop:20
   },
-
+  arrowContainer: {
+    position: 'absolute',
+    right: 0,
+    top: "50%",
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    backgroundColor: '#042628',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10
+  },
 });
 
 export default Menu;

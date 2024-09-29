@@ -32,7 +32,7 @@ const SectionItemScreen = () =>
         <View style={styles.container}>
             <ParallaxScrollView style={{ flex: 1 }}
                 parallaxHeaderHeight={250} backgroundColor={'#fff'}
-                renderBackground={() => <Image source={require('@/assets/images/react-logo.png')} style={{ height: 300, width: '100%' }} />}
+                renderBackground={() => <Image source={require('@/assets/images/image-product-1-landscape.jpg')} style={{ height: 300, width: '100%' }} />}
                 contentBackgroundColor={Colors.lightGrey}
                 stickyHeaderHeight={100}
                 renderStickyHeader={() => (

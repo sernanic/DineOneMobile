@@ -96,8 +96,8 @@ const Section = () => {
         <View style={{ padding: 5, backgroundColor: '#fff' }}>
             <Header title={section} handleExit={handleExit} />
             {/* TODO: make name Dynamic */}
-            <Text style={styles.profileNameStyle}>Hi Nicolas</Text>
-            <Text style={styles.FindYourFoodStyle}>Find Your Food</Text>
+            {/* <Text style={styles.profileNameStyle}>Hi Nicolas</Text>
+            <Text style={styles.FindYourFoodStyle}>Find Your Food</Text> */}
             <SearchInput searchValue={searchText}
                 onSearchChange={setSearchText} isShowFilterIcon={true} />
             <HorizontalSubsectionList

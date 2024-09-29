@@ -15,12 +15,12 @@ const SearchInput = ({ searchValue, onSearchChange, isShowFilterIcon }) => {
                 value={searchValue}
                 onChangeText={onSearchChange}
             />
-            {isShowFilterIcon && (
+            {/* {isShowFilterIcon && (
                 
                 <TouchableOpacity style={styles.iconContainer}>
                     <Ionicons name="options-outline" size={20} color="#fff" />
                 </TouchableOpacity>
-            )}
+            )} */}
         </View>
     );
 };

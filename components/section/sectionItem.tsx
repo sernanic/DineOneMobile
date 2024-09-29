@@ -48,10 +48,15 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
                 <View style={{flex:1,flexDirection:'column',width:"100%",alignItems: 'center',}}>
                     <BottomSheet ref={bottomSheetRef} />
 
-                    <Image
-                        source={require('@/assets/images/image-product-1-landscape.jpg')} // Replace with your image source
-                        style={styles.itemImage}
-                    />
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={require('@/assets/images/image-product-1-landscape.jpg')} // Replace with your image source
+                            style={styles.itemImage}
+                        />
+                        <View style={styles.heartIconContainer}>
+                            <Ionicons name='heart-outline' size={20} color={'black'} />
+                        </View>
+                    </View>
                     <Text style={styles.itemTitle}>{item?.name.length > 30 ? `${item?.name.substring(0, 30)}...` : item?.name}</Text>
                 </View>
                 <View style={styles.buttonContainer}>
@@ -65,9 +70,6 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
         </TouchableOpacity>
     );
 };
-
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -126,16 +128,25 @@ const styles = StyleSheet.create({
         shadowRadius: 16,
         elevation: 5, // for Android
     },
+    imageContainer: {
+        position: 'relative',
+        width: '85%',
+        height: 85,
+        marginTop: 12,
+    },
     itemImage: {
         resizeMode: 'cover',
-        position:'relative',
-        borderRadius:16,
-        width: '85%',
-        height: 82,
-        marginTop:12,
-        flexShrink:0
-        
-        
+        borderRadius: 16,
+        width: '100%',
+        height: '100%',
+    },
+    heartIconContainer: {
+        position: 'absolute',
+        top: 5,
+        right: 5,
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 4,
     },
     itemTextContainer: {
         marginLeft: 10,
