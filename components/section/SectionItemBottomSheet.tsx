@@ -8,6 +8,7 @@ import useProductStore from '@/store/selectedProductStore';
 import useCartStore from '@/store/cartStore';
 import FullWidthImage from './SectionImage'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface ImageInterface {
     id: number;
@@ -25,7 +26,7 @@ interface BottomSheetProps {
 }
 
 const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
-    const snapPoints = useMemo(() => ['94%'], []);
+    const snapPoints = useMemo(() => ['100%'], []);
     const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, []);
     const { dismiss } = useBottomSheetModal();
     const { reduceProduct, addProduct, products } = useCartStore();
@@ -47,22 +48,41 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
     return (
         <BottomSheetModal
             handleIndicatorStyle={{ display: 'none' }}
-            backgroundStyle={{ borderRadius: 10, backgroundColor: Colors.lightGrey }}
+            backgroundStyle={{
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                backgroundColor: "transparent"
+            }}
             overDragResistanceFactor={0}
             ref={ref}
             snapPoints={snapPoints}
             backdropComponent={renderBackdrop}>
+                
             <View style={styles.contentContainer}>
                 <View style={styles.container}>
                     <View style={styles.detailsContainer}>
-                        <View style={{ height: 200 }}>
+                        <View style={styles.imageContainer}>
                             <Animated.Image
                                 sharedTransitionTag={item.name}
                                 source={item.images[0]?.imageUrl ? { uri: item.images[0].imageUrl } : require('@/assets/images/image-product-1-landscape.jpg')}
-                                style={{ width: width, height: '100%' }}
+                                style={styles.topImage}
                             />
+                            <LinearGradient
+                                colors={['#FFFFFF', 'rgba(255, 255, 255, 0)']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 0, y: 1 }}
+                                style={styles.gradientOverlay}
+                            />
+                            <View style={styles.buttonOverlay}>
+                                <TouchableOpacity style={styles.overlayButton} onPress={handleCloseModal}>
+                                    <Ionicons name="close" size={24} color="black" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.overlayButton}>
+                                    <Ionicons name="heart-outline" size={24} color="black" />
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={{ flexDirection: 'row', justifyContent: "space-between", padding: 20 }}>
+                        <View style={styles.quantityContainer}>
                             <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
                                 <View style={styles.quantityButton}>
                                     <TouchableOpacity style={{ padding: 10 }} onPress={() => reduceProduct(item)}>
@@ -76,7 +96,7 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
                             </View>
                         </View>
                         <Animated.View entering={FadeInDown.delay(600)}>
-                            <Text style={styles.itemDescriptionTitle}>About the food</Text>
+                            <Text style={styles.itemDescriptionTitle}>{item.name}</Text>
                             <Text style={styles.itemDescription}>{item.description || 'No description available'}</Text>
                         </Animated.View>
                     </View>
@@ -100,6 +120,7 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         backgroundColor: '#fff',
+        paddingTop: 0,
     },
     container: {
         flex: 1,
@@ -108,6 +129,7 @@ const styles = StyleSheet.create({
     },
     detailsContainer: {
         backgroundColor: '#fff',
+        paddingTop: 0,
     },
     roundButton: {
         width: 40,
@@ -200,6 +222,49 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 24,
         fontWeight: 'bold',
+    },
+    topImage: {
+        width: '100%',
+        height: 300,
+        resizeMode: 'cover',
+    },
+    gradientOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+    imageContainer: {
+        position: 'relative',
+        zIndex: 1,
+    },
+    quantityContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 20,
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        marginTop: -20, // This creates the overlap effect
+        zIndex: 2,
+    },
+    buttonOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 16,
+    },
+    overlayButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 
