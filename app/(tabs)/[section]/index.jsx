@@ -2,8 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Text, View, StyleSheet, FlatList, Dimensions,TouchableWithoutFeedback } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Header from '@/components/section/SectionHeader';
-import items from '@/data/foodItems';
-import allSubSections from '@/data/subSections';
+import axios from 'axios'; // Make sure to install axios if you haven't already
 import SectionItem from '@/components/section/sectionItem';
 import SearchInput from '@/components/general/SearchInput';
 import HorizontalSubsectionList from '@/components/section/HorizontalSubsectionList';
@@ -15,40 +14,61 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 const { height } = Dimensions.get('window');
 
-function getRelevantSubsections(sectionItemList, subsections) {
-    const allSubsection = { id: 0, name: 'All', section: 'All' };
-    // Extract subsection IDs from sectionItemList
-    const subsectionIds = new Set(
-        sectionItemList.map(item => item.subsectionId)
-    );
-
-    // Filter subsections based on the extracted IDs
-    const filteredSubsections = subsections.filter(subsection =>
-        subsectionIds.has(subsection.id)
-    );
-
-    const subSectionToShow = [allSubsection, ...filteredSubsections];
-
-    return subSectionToShow;
-}
-
 const Section = () => {
     const router = useRouter();
     const { section } = useLocalSearchParams();
-    const sectionItems = items[section] || [];
+    const [sectionItems, setSectionItems] = useState([]);
+    const [allSubSections, setAllSubSections] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [filteredItems, setFilteredItems] = useState([]);
     const [subSections, setSubSections] = useState([]);
     const [selectedSubsection, setSelectedSubsection] = useState(null); 
     const [hasLoaded, setHasLoaded] = useState(false);
 
-    // Ref to track if relevantSubsections has been set
-    const hasSetSubSections = useRef(false);
-
-    // Reset ref when the component mounts or section changes
     useEffect(() => {
-        hasSetSubSections.current = false;
-        setSelectedSubsection(null); // Reset selectedSubsection on section change
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:4000/api/10/categories/6JDE8MZSA6FJ1');
+                const { categories } = response.data;
+                
+                // Transform categories to allSubSections format
+                const transformedSubSections = categories.map(category => ({
+                    id: category.categoryId,
+                    name: category.name,
+                    section: section
+                }));
+                
+                // Add the "All" subsection at the beginning
+                const allSubSectionsWithAll = [
+                    { id: 0, name: 'All', section: 'All' },
+                    ...transformedSubSections
+                ];
+                
+                setAllSubSections(allSubSectionsWithAll);
+                setSubSections(allSubSectionsWithAll); // Set all subsections directly
+
+                // Transform items
+                const transformedItems = categories.flatMap(category => 
+                    category.items.map(item => ({
+                        id: item.itemId,
+                        name: item.name,
+                        price: item.price,
+                        images: item.images,
+                        subsectionId: category.categoryId
+                    }))
+                );
+                setSectionItems(transformedItems);
+
+                // Set initial filtered items
+                setFilteredItems(transformedItems);
+
+                setHasLoaded(true);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
     }, [section]);
 
     useEffect(() => {
@@ -68,14 +88,6 @@ const Section = () => {
             );
         }
     }, [searchText, selectedSubsection]);
-
-    useEffect(() => {
-        if (!hasSetSubSections.current) {
-            const relevantSubsections = getRelevantSubsections(sectionItems, allSubSections);
-            setSubSections(relevantSubsections);
-            hasSetSubSections.current = true;
-        }
-    }, [sectionItems]);
 
     useEffect(() => {
         if (subSections.length > 0 && selectedSubsection === null) {

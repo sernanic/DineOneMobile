@@ -9,17 +9,28 @@ import useCartStore from '@/store/cartStore';
 import FullWidthImage from './SectionImage'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
-export type Ref = BottomSheetModal;
+interface ImageInterface {
+    id: number;
+    imageUrl: string;
+  }
+interface BottomSheetProps {
+    item: {
+        id: string;
+        name: string;
+        price: number;
+        images: ImageInterface[];
+        subsectionId: string;
+        description?: string;
+    };
+}
 
-const BottomSheet = forwardRef<Ref>((props, ref) => {
+const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
     const snapPoints = useMemo(() => ['94%'], []);
     const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, []);
     const { dismiss } = useBottomSheetModal();
-    const { selectedProduct } = useProductStore();
     const { reduceProduct, addProduct, products } = useCartStore();
 
-    const productId = selectedProduct?.id;
-    const product = productId ? products[productId] : undefined;
+    const product = products[item.id];
     const quantity = product ? product.quantity : 1;
     const navigation = useNavigation();
     const { width } = useWindowDimensions();
@@ -30,10 +41,8 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
     const [totalPrice, setTotalPrice] = useState(0);
 
     useEffect(() => {
-        if (selectedProduct && quantity) {
-            setTotalPrice(parseFloat(selectedProduct.price) * quantity);
-        }
-    }, [selectedProduct, quantity]);
+        setTotalPrice(item.price * quantity);
+    }, [item, quantity]);
 
     return (
         <BottomSheetModal
@@ -44,51 +53,44 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
             snapPoints={snapPoints}
             backdropComponent={renderBackdrop}>
             <View style={styles.contentContainer}>
-                {selectedProduct ? (
-                    <View style={styles.container}>
-                        <View style={styles.detailsContainer}>
-                            {/* <FullWidthImage source={require('@/assets/images/react-logo.png')} onBackPress={handleCloseModal}/> */}
-                            <View style={{ height: 200, }}>
-                                <Animated.Image
-                                    sharedTransitionTag={selectedProduct.name}
-                                    source={require('@/assets/images/image-product-1-landscape.jpg')}
-                                    style={{ width: width, height: '100%' }}
-                                />
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: "space-between", padding: 20 }}>
-
-                                <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
-                                    <View style={styles.quantityButton}>
-                                        <TouchableOpacity style={{ padding: 10 }} onPress={() => reduceProduct(selectedProduct)}>
-                                            <Ionicons name='remove' size={20} color={'#fff'} />
-                                        </TouchableOpacity>
-                                        <View><Text style={{ color: '#fff' }}>{quantity}</Text></View>
-                                        <TouchableOpacity style={{ padding: 10 }} onPress={() => addProduct(selectedProduct)}>
-                                            <Ionicons name='add' size={20} color={'#fff'} />
-                                        </TouchableOpacity>
-                                    </View>
+                <View style={styles.container}>
+                    <View style={styles.detailsContainer}>
+                        <View style={{ height: 200 }}>
+                            <Animated.Image
+                                sharedTransitionTag={item.name}
+                                source={item.images[0]?.imageUrl ? { uri: item.images[0].imageUrl } : require('@/assets/images/image-product-1-landscape.jpg')}
+                                style={{ width: width, height: '100%' }}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: "space-between", padding: 20 }}>
+                            <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
+                                <View style={styles.quantityButton}>
+                                    <TouchableOpacity style={{ padding: 10 }} onPress={() => reduceProduct(item)}>
+                                        <Ionicons name='remove' size={20} color={'#fff'} />
+                                    </TouchableOpacity>
+                                    <View><Text style={{ color: '#fff' }}>{quantity}</Text></View>
+                                    <TouchableOpacity style={{ padding: 10 }} onPress={() => addProduct(item)}>
+                                        <Ionicons name='add' size={20} color={'#fff'} />
+                                    </TouchableOpacity>
                                 </View>
                             </View>
-                            {/*TODO: Add Title Styling */}
-                            <Animated.View entering={FadeInDown.delay(600)}>
-                                <Text style={styles.itemDescriptionTitle}>About the food</Text>
-                                <Text style={styles.itemDescription}>{selectedProduct.description}</Text>
-                            </Animated.View>
                         </View>
-                        <View style={[styles.buttonContainer]}>
-                            <TouchableOpacity
-                                style={[styles.addToCartTouchable, styles.addCartButton]}
-                                onPress={() => addProduct(selectedProduct)}
-                            >
-                                <Text style={styles.addToCartText}>
-                                    Add {quantity} To Cart • ${totalPrice.toFixed(2)}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                        <Animated.View entering={FadeInDown.delay(600)}>
+                            <Text style={styles.itemDescriptionTitle}>About the food</Text>
+                            <Text style={styles.itemDescription}>{item.description || 'No description available'}</Text>
+                        </Animated.View>
                     </View>
-                ) : (
-                    <Text >No product selected</Text>
-                )}
+                    <View style={[styles.buttonContainer]}>
+                        <TouchableOpacity
+                            style={[styles.addToCartTouchable, styles.addCartButton]}
+                            onPress={() => addProduct(item)}
+                        >
+                            <Text style={styles.addToCartText}>
+                                Add {quantity} To Cart • ${totalPrice.toFixed(2)}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
         </BottomSheetModal>
     );

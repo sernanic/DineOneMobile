@@ -12,12 +12,18 @@ import Colors from '@/constants/Colors';
 import {MotiView} from 'moti';
 
 
+interface ImageInterface {
+  id: number;
+  imageUrl: string;
+}
+
 interface SectionItemProps {
     item: {
         id: string;
         name: string;
-        price: string;
-        calories: string;
+        price: number;
+        images: ImageInterface[];
+        subsectionId: string;
     };
     index:number;
 }
@@ -27,7 +33,8 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
     const { setSelectedProduct } = useProductStore();
     const product = products[item.id];
     const quantity = product ? product.quantity : 0;
-
+    
+     
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
     const openModal = (item: any) => {
@@ -46,11 +53,11 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
             transition={{delay: 500 + index * 200}}>
             <View style={styles.item}>
                 <View style={{flex:1,flexDirection:'column',width:"100%",alignItems: 'center',}}>
-                    <BottomSheet ref={bottomSheetRef} />
+                    <BottomSheet ref={bottomSheetRef} item={item}/>
 
                     <View style={styles.imageContainer}>
                         <Image
-                            source={require('@/assets/images/image-product-1-landscape.jpg')} // Replace with your image source
+                            source={item.images[0]?.imageUrl ? { uri: item.images[0].imageUrl } : require('@/assets/images/image-product-1-landscape.jpg')}
                             style={styles.itemImage}
                         />
                         <View style={styles.heartIconContainer}>
@@ -60,7 +67,7 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
                     <Text style={styles.itemTitle}>{item?.name.length > 30 ? `${item?.name.substring(0, 30)}...` : item?.name}</Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <Text style={styles.priceText}>${item.price}</Text>
+                    <Text style={styles.priceText}>${item.price.toFixed(2)}</Text>
                     {/* <View style={styles.addContainer}>
                         <Ionicons name='add' size={24} color={'#fff'} />
                     </View> */}
