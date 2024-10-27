@@ -29,18 +29,34 @@ export default function Auth() {
 
   async function signUpWithEmail() {
     setLoading(true)
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    })
-    console.log("session",session)
-    if (error) Alert.alert(error.message)
-    if (!session) Alert.alert('Please check your inbox for email verification!')
-    setSession(session)
-    setLoading(false)
+    try {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      })
+      
+      console.log("session", session)
+      
+      if (error) {
+        if (error.message.includes("Database error saving new user")) {
+          Alert.alert("Sign Up Error", "There was an issue creating your account. Please try again later or contact support.")
+        } else {
+          Alert.alert("Sign Up Error", error.message)
+        }
+      } else if (!session) {
+        Alert.alert("Sign Up Successful", "Please check your inbox for email verification!")
+      } else {
+        setSession(session)
+      }
+    } catch (error) {
+      console.error("Unexpected error during sign up:", error)
+      Alert.alert("Sign Up Error", "An unexpected error occurred. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

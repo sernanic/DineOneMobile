@@ -19,7 +19,7 @@ interface ImageInterface {
 
 interface SectionItemProps {
     item: {
-        id: string;
+        itemId: string;
         name: string;
         price: number;
         images: ImageInterface[];
@@ -31,9 +31,9 @@ interface SectionItemProps {
 const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
     const { reduceProduct, addProduct, products } = useCartStore();
     const { setSelectedProduct } = useProductStore();
-    const product = products[item.id];
+    const product = products[item.itemId];
     const quantity = product ? product.quantity : 0;
-    
+    // console.log(item);
      
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -46,7 +46,7 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
 
         <TouchableOpacity  onPress={() => openModal(item)}>
             <MotiView
-            key={item.id} 
+            key={item.itemId} 
             style={styles.listContainer}
             from={{opacity: 0, translateY: 50}}
             animate={{opacity: 1, translateY: 0}}
@@ -68,9 +68,6 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
                 </View>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.priceText}>${item.price.toFixed(2)}</Text>
-                    {/* <View style={styles.addContainer}>
-                        <Ionicons name='add' size={24} color={'#fff'} />
-                    </View> */}
                 </View>
             </View>
             </MotiView>

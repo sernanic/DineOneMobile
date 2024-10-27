@@ -30,8 +30,8 @@ const Section = () => {
             try {
                 const response = await axios.get('http://127.0.0.1:4000/api/10/categories/6JDE8MZSA6FJ1');
                 const { categories } = response.data;
-                
                 // Transform categories to allSubSections format
+                
                 const transformedSubSections = categories.map(category => ({
                     id: category.categoryId,
                     name: category.name,
@@ -50,13 +50,15 @@ const Section = () => {
                 // Transform items
                 const transformedItems = categories.flatMap(category => 
                     category.items.map(item => ({
-                        id: item.itemId,
+                        itemId: item.itemId,
                         name: item.name,
                         price: item.price,
                         images: item.images,
-                        subsectionId: category.categoryId
+                        subsectionId: category.categoryId,
+                        description: item.description
                     }))
                 );
+                console.log(transformedItems);
                 setSectionItems(transformedItems);
 
                 // Set initial filtered items
