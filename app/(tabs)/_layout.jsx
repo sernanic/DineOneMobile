@@ -8,7 +8,7 @@ const tabBarHeight = screenHeight * 0.1;
 
 export default function RootLayout() {
   return (
-    <View style={[styles.container, { paddingBottom: tabBarHeight }]}>
+    <View style={[styles.container]}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="menu" options={{ headerShown: false }} />
@@ -30,6 +30,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#fff'
+    backgroundColor:'transparent'
   },
 });

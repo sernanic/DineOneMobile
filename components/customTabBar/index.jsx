@@ -3,65 +3,84 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-nati
 import { useRouter, usePathname } from 'expo-router';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
 const tabs = [
-  { name: 'HOME', route: '/' },
-  { name: 'MENU', route: '/menu' },
-  { name: 'REWARDS', route: '/rewards' },
-  { name: 'CART', route: '/cart' },
+  { name: 'Home', route: '/', icon: 'home' },
+  { name: 'Menu', route: '/menu', icon: 'food' },
+  { name: 'Rewards', route: '/rewards', icon: 'star' },
+  { name: 'Cart', route: '/cart', icon: 'cart' },
 ];
 
 export default function CustomTabBar() {
   const router = useRouter();
   const currentPath = usePathname();
-  const tabWidth = width / tabs.length;
+  const tabWidth = width / tabs.length * 1.2;
+  console.log(tabWidth);
 
-  const lineWidth = useSharedValue(0);
+  const animatedWidth = useSharedValue(0);
+  const activeIndex = useSharedValue(0);
 
-  const lineStyle = useAnimatedStyle(() => ({
-    width: lineWidth.value,
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: activeIndex.value === 1 
+      ? animatedWidth.value * 1.2  // Increased width only for Menu (1)
+      : activeIndex.value === 2 
+        ? animatedWidth.value * 1.2  // Keeping the existing width for Rewards (2)
+        : animatedWidth.value,  // Default width for Home (0) and other tabs
+    position: 'absolute',
+    height: 40,
+    backgroundColor: Colors.primary,
+    borderRadius: 20,
+    left: (activeIndex.value * tabWidth) + (tabWidth - tabWidth * 0.8) / 2 - 
+      (activeIndex.value === 1 ? 45 : 0) -  // Added offset for Menu
+      (activeIndex.value > 1 ? 30 + (activeIndex.value - 1) * 15 : 0) - 
+      (activeIndex.value === tabs.length - 1 ? 35 : 0) - 
+      (activeIndex.value === 2 ? 25 : 0),
   }));
 
-  const [tabWidths, setTabWidths] = React.useState({});
-
-  const handleTextLayout = (event, index) => {
-    const { width } = event.nativeEvent.layout;
-    setTabWidths((prev) => ({ ...prev, [index]: width }));
-  };
-
   React.useEffect(() => {
-    const newLineWidth = tabWidths[tabs.findIndex(tab => tab.route === currentPath)] || 0;
-    lineWidth.value = withTiming(newLineWidth, {
-      duration: 500,
-      easing: Easing.out(Easing.cubic),
+    const newActiveIndex = tabs.findIndex(tab => tab.route === currentPath);
+    activeIndex.value = newActiveIndex;
+    
+    animatedWidth.value = 0;
+    
+    animatedWidth.value = withTiming(tabWidth * 0.8, {
+      duration: 800,
+      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
     });
-  }, [currentPath, tabWidths]);
+  }, [currentPath]);
 
   return (
     <View style={styles.container}>
+      <Animated.View style={animatedStyle} />
       {tabs.map((tab, index) => (
         <TouchableOpacity
           key={tab.name}
-          style={[styles.tab, { width: tabWidths[index] || 'auto' }]}
-          onPress={() => {
-            router.push(tab.route);
-            lineWidth.value = 0;
-          }}
+          style={[
+            styles.tab,
+          ]}
+          onPress={() => router.push(tab.route)}
         >
-          <Text
-            style={[
-              styles.tabText,
-              currentPath === tab.route && styles.activeTabText
-            ]}
-            onLayout={(event) => handleTextLayout(event, index)}
-          >
-            {tab.name}
-          </Text>
-          {currentPath === tab.route && (
-            <Animated.View style={[styles.activeLine, lineStyle]} />
-          )}
+          <View style={styles.tabContent}>
+            <MaterialCommunityIcons
+              name={tab.icon}
+              size={24}
+              color={currentPath === tab.route ? '#fff' : '#000'}
+              style={currentPath === tab.route ? styles.activeTabIcon : styles.tabIcon}
+            />
+            {currentPath === tab.route && (
+              <Text
+                style={[
+                  styles.tabText,
+                  currentPath === tab.route && styles.activeTabText
+                ]}
+              >
+                {tab.name}
+              </Text>
+            )}
+          </View>
         </TouchableOpacity>
       ))}
     </View>
@@ -74,35 +93,52 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     width: width,
-    height: 100,
+    height: 70,
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
     position: 'absolute',
-    bottom: 0,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    bottom: 40,
+    borderRadius: 30,
+    width: '95%',
+    alignSelf: 'center',
+    overflow: 'hidden', 
+    //shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 4,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 8,
+    // elevation: 8,
   },
   tab: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    zIndex: 1,
+    width: width / tabs.length,
+  },
+  tabContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  tabIcon: {
+    marginRight: 0,
+  },
+  activeTabIcon: {
+    marginRight: 8,
   },
   tabText: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#000',
     fontWeight: '600',
-    marginBottom: 0,
-    paddingHorizontal: 5, // Add some padding to ensure the line starts under the first letter
   },
   activeTabText: {
-    color: Colors.primary,
-  },
-  activeLine: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0, // Start from the left edge of the text
-    height: 3,
-    backgroundColor: Colors.primary,
+    color: '#fff',
   },
 });

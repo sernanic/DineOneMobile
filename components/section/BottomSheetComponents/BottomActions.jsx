@@ -3,14 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 
-interface BottomActionsProps {
-    localQuantity: number;
-    setLocalQuantity: React.Dispatch<React.SetStateAction<number>>;
-    totalPrice: number;
-    handleAddToCart: () => void;
-}
-
-const BottomActions = ({ localQuantity, setLocalQuantity, totalPrice, handleAddToCart }: BottomActionsProps) => {
+const BottomActions = ({ localQuantity, setLocalQuantity, totalPrice, handleAddToCart }) => {
     return (
         <View style={styles.stickyBottomContainer}>
             <View style={styles.bottomRowContainer}>

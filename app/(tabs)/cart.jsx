@@ -47,7 +47,7 @@ const Cart = () => {
                     <FlatList
                         data={Object.values(products)}
                         renderItem={renderItem}
-                        keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item) => item.itemId}
                         contentContainerStyle={styles.listContent}
                     />
                 )}

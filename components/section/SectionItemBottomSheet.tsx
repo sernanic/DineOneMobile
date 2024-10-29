@@ -57,16 +57,19 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
             const quantityDifference = localQuantity - existingQuantity;
             if (quantityDifference > 0) {
                 for (let i = 0; i < quantityDifference; i++) {
-                    addProduct(item);
+                    addProduct({...item, id: item.itemId});
                 }
             } else {
                 for (let i = 0; i < Math.abs(quantityDifference); i++) {
-                    removeProduct(item.itemId);
+                    removeProduct({...item, id: item.itemId});
                 }
             }
         }
+        if (ref && 'current' in ref && ref.current) {
+            ref.current.close();
+        }
         dismiss();
-    }, [localQuantity, product, item, addProduct, removeProduct, dismiss]);
+    }, [localQuantity, product, item, addProduct, removeProduct, dismiss, ref]);
 
     return (
         <BottomSheetModal

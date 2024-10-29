@@ -13,7 +13,7 @@ const HorizontalSubsectionList = ({ subsections, onSelectSubsection }) => {
     }, [subsections, selectedId, onSelectSubsection]);
 
     const handleSelectSubsection = (item) => {
-        setSelectedId(item.id);  // Update the selected ID
+        setSelectedId(item.itemId);  // Update the selected ID
         onSelectSubsection(item);  // Notify parent about the selection
     };
 
@@ -21,13 +21,13 @@ const HorizontalSubsectionList = ({ subsections, onSelectSubsection }) => {
         <TouchableOpacity
             style={[
                 styles.subsectionItem,
-                item.id === selectedId ? styles.selectedItem : styles.unselectedItem
+                item.itemId === selectedId ? styles.selectedItem : styles.unselectedItem
             ]}
             onPress={() => handleSelectSubsection(item)}
         >
             <Text style={[
                 styles.subsectionText,
-                item.id === selectedId ? styles.selectedText : styles.unselectedText
+                item.itemId === selectedId ? styles.selectedText : styles.unselectedText
             ]}>
                 {item.name}
             </Text>
@@ -39,7 +39,7 @@ const HorizontalSubsectionList = ({ subsections, onSelectSubsection }) => {
             <FlatList
                 data={subsections}
                 renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={item => item.itemId}
                 horizontal
                 showsHorizontalScrollIndicator={false}
             />
