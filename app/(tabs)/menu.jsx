@@ -1,139 +1,177 @@
-import React, { useRef, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Animated, Button, Dimensions,SafeAreaView } from 'react-native';
-import Colors from "@/constants/Colors"
-import { useRouter } from 'expo-router';
-import Header from '@/components/home/header';
-import { Surface } from 'react-native-paper';
-import { Ionicons } from '@expo/vector-icons';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import React, { useEffect, useState, useRef } from 'react';
+import { Text, View, StyleSheet, FlatList, Dimensions,TouchableWithoutFeedback } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import Header from '@/components/section/SectionHeader';
+import axios from 'axios'; // Make sure to install axios if you haven't already
+import SectionItem from '@/components/section/sectionItem';
+import SearchInput from '@/components/general/SearchInput';
+import HorizontalSubsectionList from '@/components/section/HorizontalSubsectionList';
+import Colors from '@/constants/Colors';
 
-import CustomImageCarousal from '@/components/general/carousal/customImageCoursal'
+
+import {MotiView} from 'moti';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const { height } = Dimensions.get('window');
 
-const sections = [
-  { section: 'Drinks', image: require('@/assets/images/icon.png') },
-  { section: 'Burritos', image: require('@/assets/images/icon.png') },
-  { section: 'Tacos', image: require('@/assets/images/icon.png') },
-  { section: 'Desserts', image: require('@/assets/images/icon.png') },
-];
+const Section = () => {
+    const router = useRouter();
+    const { section } = useLocalSearchParams();
+    const [sectionItems, setSectionItems] = useState([]);
+    const [allSubSections, setAllSubSections] = useState([]);
+    const [searchText, setSearchText] = useState('');
+    const [filteredItems, setFilteredItems] = useState([]);
+    const [subSections, setSubSections] = useState([]);
+    const [selectedSubsection, setSelectedSubsection] = useState(null); 
+    const [hasLoaded, setHasLoaded] = useState(false);
 
-const Menu = () => {
-  const router = useRouter();
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:4000/api/10/categories/6JDE8MZSA6FJ1');
+                const { categories } = response.data;
+                // Transform categories to allSubSections format
+                
+                const transformedSubSections = categories.map(category => ({
+                    id: category.categoryId,
+                    name: category.name,
+                    section: section
+                }));
+                
+                // Add the "All" subsection at the beginning
+                const allSubSectionsWithAll = [
+                    { id: 0, name: 'All', section: 'All' },
+                    ...transformedSubSections
+                ];
+                
+                setAllSubSections(allSubSectionsWithAll);
+                setSubSections(allSubSectionsWithAll); // Set all subsections directly
 
-  const data2 = [
-    {
-      image: require('../../assets/images/image-product-1-landscape.jpg'),
-    },
-    {
-      image: require('../../assets/images/image-product-1-landscape.jpg'),
-    },
-    {
-      image: require('../../assets/images/image-product-1-landscape.jpg'),
-    },
-    {
-      image: require('../../assets/images/image-product-1-landscape.jpg'),
-    },
-  ];
+                // Transform items
+                const transformedItems = categories.flatMap(category => 
+                    category.items.map(item => ({
+                        itemId: item.itemId,
+                        name: item.name,
+                        price: item.price,
+                        images: item.images,
+                        subsectionId: category.categoryId,
+                        description: item.description
+                    }))
+                );
+                setSectionItems(transformedItems);
 
-  return (
-    <View style={{ flex: 1, backgroundColor:'#fff'}}>
-      <Header />
-      
-      <ScrollView style={[styles.container]} showsVerticalScrollIndicator={false}>
-      <Text style={{marginLeft:'8%',fontSize:'20px',fontWeight:'700'}}>Featured</Text>
-      <View style={styles.carouselContainer}>
-        <CustomImageCarousal data={data2} autoPlay={true} pagination={true} />
-      </View>
-      <Text style={{marginLeft:'8%',fontSize:'20px',fontWeight:'700',marginBottom:10}}>Categories</Text>
-      {sections.map((section, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.item}
-                onPress={() => router.push({
-                  pathname: '/[section]',
-                  params: { section: section.section.toLowerCase() }
-                })}
-              >
-                <View key={index} style={styles.itemContainer}>
-                    <Image source={require('../../assets/images/image-product-1-landscape.jpg')} style={styles.image} />
-                    <Text style={styles.sectionText}>{section.section}</Text>
-                    <View style={styles.arrowContainer}>
-                    <AntDesign name="arrowright" size={16} color="white" />
+                // Set initial filtered items
+                setFilteredItems(transformedItems);
+
+                setHasLoaded(true);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [section]);
+
+    useEffect(() => {
+        if (selectedSubsection && selectedSubsection.id !== 0) {
+            setFilteredItems(
+                sectionItems.filter(item => 
+                    item.name.toLowerCase().includes(searchText.toLowerCase()) &&
+                    item.subsectionId === selectedSubsection.id
+                )
+            );
+            setHasLoaded(true);
+        } else {
+            setFilteredItems(
+                sectionItems.filter(item =>
+                    item.name.toLowerCase().includes(searchText.toLowerCase())
+                )
+            );
+        }
+    }, [searchText, selectedSubsection]);
+
+    useEffect(() => {
+        if (subSections.length > 0 && selectedSubsection === null) {
+            setSelectedSubsection(subSections[0]);
+        }
+    }, [subSections]);
+
+    const pairs = [];
+    for (let i = 0; i < filteredItems.length; i += 2) {
+        pairs.push(filteredItems.slice(i, i + 2));
+    }
+
+    const handleExit = () => {
+        router.push('/');
+    };
+
+    return (
+        <View style={{ padding: 5, backgroundColor: '#fff' }}>
+            <Header title={section} handleExit={handleExit} />
+            {/* TODO: make name Dynamic */}
+            {/* <Text style={styles.profileNameStyle}>Hi Nicolas</Text>
+            <Text style={styles.FindYourFoodStyle}>Find Your Food</Text> */}
+            <SearchInput searchValue={searchText}
+                onSearchChange={setSearchText} isShowFilterIcon={true} />
+            <HorizontalSubsectionList
+                subsections={subSections}
+                onSelectSubsection={setSelectedSubsection}
+            />
+                    
+
+            <FlatList
+                data={pairs}
+                contentContainerStyle={{ paddingBottom: 350 }}
+                keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                    <View style={styles.row}>
+                        {item.map((subItem, subIndex) => (
+                            <View 
+                                style={[
+                                    styles.item, 
+                                    item.length === 1 && { marginRight: 'auto' }
+                                ]} 
+                                key={subIndex}
+                            >
+                                <SectionItem item={subItem} index={subIndex}/>
+                            </View>
+                        ))}
+                        {item.length === 1 && <View style={styles.item} />}
                     </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-      </ScrollView>
-    </View>
-  );
+                )}
+            />
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    marginTop: 10
-  },
-  item: {
-    padding: 5,
-    paddingLeft: 15,
-    marginBottom: 5, // Added margin bottom for more spacing between rows
-  },
-  text: {
-    fontSize: 18,
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 5,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    width: '98%',
-    position: 'relative',
-    // iOS shadow
-    shadowColor: 'rgba(6, 51, 54, 0.10)',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 16,
-    // Android elevation
-    elevation: 5,
-    height:100
-  },
-  image: {
-    width: 100,
-    height: 84,
-    resizeMode: 'cover',
-    marginRight: 20,
-    borderRadius:16
-  },
-  sectionText: {
-    fontSize: 24,
-    marginLeft: 10,
-    color: "black",
-    fontWeight:'600'
-  },
-  animatedView: {
-    flex: 1,
-  },
-  text: {textAlign: 'center', color: 'black', marginBottom: 10},
-  carouselContainer: {
-    marginBottom: 0,
-    backgroundColor:'#fff',
-    paddingTop:20
-  },
-  arrowContainer: {
-    position: 'absolute',
-    right: 0,
-    top: "50%",
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    backgroundColor: '#042628',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10
-  },
+    item: {
+        flexDirection: 'row',
+        margin: 0,
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'stretch',
+
+    },
+    FindYourFoodStyle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        paddingBottom: 20,
+        paddingLeft: 12
+    },
+    profileNameStyle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        paddingBottom: 20,
+        paddingLeft: 12,
+        color: Colors.primary
+    }
 });
 
-export default Menu;
+export default Section;

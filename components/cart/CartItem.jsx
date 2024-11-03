@@ -1,43 +1,35 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import useCartStore from '@/store/cartStore';
-import { Ionicons } from '@expo/vector-icons'
-
+import { Ionicons } from '@expo/vector-icons';
 
 const CartItem = ({ item }) => {
-    const { addProduct, reduceProduct,removeProduct } = useCartStore();
+    const { addProduct, reduceProduct, removeProduct } = useCartStore();
 
     const handleIncrement = () => addProduct(item);
     const handleDecrement = () => reduceProduct(item);
     const handleRemoval = () => removeProduct(item);
 
-
     return (
-        <View style={styles.CardContainer}>
-            <View style={styles.card}>
-                <View style={styles.leftContent}>
-                    <Image
-                        source={{ uri: 'https://via.placeholder.com/80' }} // Replace with actual image source
-                        style={styles.image}
-                    />
-                    <View style={styles.productInfo}>
-                        <Text style={styles.productName}>{item.name}</Text>
-                        <Text style={styles.price}>${item.price}</Text>
-                        <View style={styles.quantityContent}>
-                            <TouchableOpacity onPress={handleDecrement} style={styles.button}>
-                                <Text style={styles.buttonText}>-</Text>
-                            </TouchableOpacity>
-                            <Text style={styles.quantity}>{item.quantity}</Text>
-                            <TouchableOpacity onPress={handleIncrement} style={styles.button}>
-                                <Text style={styles.buttonText}>+</Text>
-                            </TouchableOpacity>
-                        </View>
+        <View style={styles.cardContainer}>
+            <Image
+                source={{ uri: item.image || 'https://via.placeholder.com/80' }}
+                style={styles.image}
+            />
+            
+            <View style={styles.productInfo}>
+                <Text style={styles.productName}>{item.name}</Text>
+                <View style={styles.bottomContent}>
+                    <View style={styles.quantityContainer}>
+                        <TouchableOpacity onPress={handleDecrement} style={styles.quantityButton}>
+                            <Text style={styles.quantityButtonText}>-</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.quantity}>{item.quantity}</Text>
+                        <TouchableOpacity onPress={handleIncrement} style={styles.quantityButton}>
+                            <Text style={styles.quantityButtonText}>+</Text>
+                        </TouchableOpacity>
                     </View>
-                </View>
-                <View style={styles.rightContent}>
-                    <TouchableOpacity onPress={handleRemoval} >
-                        <Text style={styles.buttonText}><Ionicons name="close" size={24} color="gray" /></Text>
-                    </TouchableOpacity>
+                    <Text style={styles.price}>${item.price}</Text>
                 </View>
             </View>
         </View>
@@ -45,91 +37,67 @@ const CartItem = ({ item }) => {
 };
 
 const styles = StyleSheet.create({
-    CardContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10
-    },
-    card: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 16,
-        backgroundColor: 'white',
-        borderRadius: 8,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        width: '95%'
-    },
-    leftContent: {
+    cardContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        flex: 1,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        backgroundColor: '#fff',
+        marginBottom: 12,
     },
     image: {
         width: 80,
         height: 80,
-        borderRadius: 10,
+        borderRadius: 8,
         marginRight: 16,
     },
     productInfo: {
-        justifyContent: 'center',
-        height:'100%',
+        flex: 1,
+        justifyContent: 'space-between',
     },
     productName: {
         fontSize: 16,
         fontWeight: '600',
-        width: "70%"
+        marginBottom: 12,
+        color: '#1A1A1A',
     },
-    price: {
-        fontSize: 14,
-        fontWeight: '700',
-        color: 'gray',
-        marginTop:10,
+    bottomContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    calories: {
-        fontSize: 12,
-        color: 'gray',
-    },
-    quantityContent: {
+    quantityContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop:10,
+        backgroundColor: '#F5F5F5',
+        borderRadius: 20,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
     },
-    button: {
-        width: 30,
-        height: 30,
-        borderRadius: 8,
+    quantityButton: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 4,
-        borderColor:'gray',
-        borderWidth: 1,
     },
-    buttonText: {
-        fontSize: 18,
-        fontWeight: '400',
-        color:'gray'
+    quantityButtonText: {
+        fontSize: 16,
+        color: '#666',
+        fontWeight: '500',
     },
     quantity: {
+        marginHorizontal: 12,
         fontSize: 16,
-        fontWeight: '400',
-        marginHorizontal: 8,
+        fontWeight: '500',
+        color: '#1A1A1A',
     },
-    rightContent:{
-        height:'100%',
-        flex:1,
-        alignItems:'flex-end',
-        justifyContent:'flex-end'
-
-    }
+    price: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: '#1A1A1A',
+        marginLeft: 16,
+    },
 });
 
 export default CartItem;

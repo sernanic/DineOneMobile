@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         position: 'relative',
         width: '85%',
-        height: 85,
+        height: 100,
         marginTop: 12,
     },
     itemImage: {

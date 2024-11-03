@@ -15,12 +15,14 @@ export default function RootLayout() {
         <Stack.Screen name="rewards" options={{ headerShown: false }} />
         <Stack.Screen name="cart" options={{ headerShown: false }} />
         <Stack.Screen name="orders" options={{ headerShown: false }} />
-        <Stack.Screen name="[section]/index" options={{ headerShown: false }} />
+        {/* <Stack.Screen name="[section]/index" options={{ headerShown: false }} /> */}
         <Stack.Screen 
           name="[section]/[sectionItem]" 
           options={{ headerShown: false, animation: 'slide_from_right' }} 
         />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
+        <Stack.Screen name="SignUp" options={{ headerShown: false }} />
+        
       </Stack>
       <CustomTabBar />
     </View>
