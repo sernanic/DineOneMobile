@@ -50,19 +50,18 @@ const Cart = () => {
     return (
         <View style={styles.container}>
             <Header title="My Cart" handleExit={handleExit} />
-            <View style={styles.cartContent}>
+            <View style={styles.mainContainer}>
                 <FlatList
                     data={Object.values(products)}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.itemId}
                     contentContainerStyle={styles.listContent}
+                    ListFooterComponent={<View style={styles.listFooter} />}
+                    scrollEnabled={true}
                 />
                 
-
-                
-            </View>
-            {/* Order Summary */}
-            <View style={styles.summaryContainer}>
+                {/* Order Summary - Now positioned absolutely */}
+                <View style={styles.summaryContainer}>
                     <View style={styles.summaryCard}>
                         <View style={styles.summaryRow}>
                             <Text style={styles.summaryLabel}>Subtotal</Text>
@@ -82,7 +81,7 @@ const Cart = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                
+            </View>
             <Modal
                 visible={isCheckoutOpen}
                 onRequestClose={() => setIsCheckoutOpen(false)}
@@ -140,12 +139,16 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    cartContent: {
+    mainContainer: {
         flex: 1,
-        padding: 20,
+        position: 'relative',
+        
     },
     listContent: {
-        flexGrow: 1,
+        paddingHorizontal: 20,
+    },
+    listFooter: {
+        height: 400, // Adjust this value based on your summary container height
     },
     promoContainer: {
         flexDirection: 'row',
@@ -167,9 +170,13 @@ const styles = StyleSheet.create({
         color: '#666',
     },
     summaryContainer: {
-        marginVertical: 20,
-        marginBottom: 100,
+        position: 'absolute',
+        bottom: 100,
+        left: 0,
+        right: 0,
+        backgroundColor: 'white',
         paddingHorizontal: 20,
+        paddingBottom: 20,
     },
     summaryCard: {
         backgroundColor: '#fff',
