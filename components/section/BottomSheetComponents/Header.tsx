@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Image, Text } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, Text, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Animated from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedScrollHandler, interpolate, useReducedMotion } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BottomSheetProps } from '../types';
 import ReadMoreText from '@/components/general/ReadMoreText';
@@ -12,16 +12,86 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ item, handleCloseModal }) => {
+    const shouldReduceMotion = useReducedMotion();
+    const scrollX = useSharedValue(0);
+    const ITEM_WIDTH = Dimensions.get('window').width;
+    
+    const scrollHandler = useAnimatedScrollHandler({
+        onScroll: (event) => {
+            if (!shouldReduceMotion) {
+                scrollX.value = event.contentOffset.x;
+            }
+        },
+    });
+
     console.log(item);
     return (
         <Animated.View style={styles.header}>
             <View style={styles.imageContainer}>
-                <Image
-                    source={item.images[0]?.imageUrl 
-                        ? { uri: item.images[0].imageUrl } 
-                        : require('@/assets/images/image-product-1-landscape.jpg')}
-                    style={styles.topImage}
-                />
+                <Animated.ScrollView
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    onScroll={scrollHandler}
+                    scrollEventThrottle={16}
+                >
+                    {item.images.length > 0 ? (
+                        item.images.map((image, index) => (
+                            <Image
+                                key={index}
+                                source={image?.imageUrl 
+                                    ? { uri: image.imageUrl } 
+                                    : require('@/assets/images/image-product-1-landscape.jpg')}
+                                style={[styles.topImage, { width: ITEM_WIDTH }]}
+                            />
+                        ))
+                    ) : (
+                        <Image
+                            source={require('@/assets/images/image-product-1-landscape.jpg')}
+                            style={[styles.topImage, { width: ITEM_WIDTH }]}
+                        />
+                    )}
+                </Animated.ScrollView>
+                
+                {/* Pagination Dots */}
+                <View style={styles.paginationContainer}>
+                    {item.images.length > 0 ? (
+                        item.images.map((_, index) => {
+                            const inputRange = [
+                                index * ITEM_WIDTH,
+                                (index + 1) * ITEM_WIDTH,
+                            ];
+                            
+                            return (
+                                <Animated.View
+                                    key={index}
+                                    style={[
+                                        styles.paginationDot,
+                                        !shouldReduceMotion && {
+                                            opacity: interpolate(
+                                                scrollX.value,
+                                                inputRange,
+                                                [1, 0.5],
+                                                'clamp'
+                                            ),
+                                            transform: [{
+                                                scale: interpolate(
+                                                    scrollX.value,
+                                                    inputRange,
+                                                    [1.2, 0.8],
+                                                    'clamp'
+                                                ),
+                                            }],
+                                        },
+                                    ]}
+                                />
+                            );
+                        })
+                    ) : (
+                        <Animated.View style={[styles.paginationDot]} />
+                    )}
+                </View>
+                
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 0)']}
                     start={{ x: 0, y: 0 }}
@@ -61,7 +131,6 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     topImage: {
-        width: '100%',
         height: '100%',
         resizeMode: 'cover',
     },
@@ -109,6 +178,20 @@ const styles = StyleSheet.create({
         color: 'gray',
         fontWeight: '400',
         lineHeight: 25,
+    },
+    paginationContainer: {
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: 30,
+        alignSelf: 'center',
+        zIndex: 2,
+    },
+    paginationDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: 'white',
+        marginHorizontal: 4,
     },
 });
 

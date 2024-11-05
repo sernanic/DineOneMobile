@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing, useReducedMotion } from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -22,6 +22,8 @@ export default function CustomTabBar() {
 
   const animatedWidth = useSharedValue(0);
   const activeIndex = useSharedValue(0);
+
+  const isReducedMotionEnabled = useReducedMotion();
 
   const animatedStyle = useAnimatedStyle(() => ({
     width: activeIndex.value === 1 
@@ -47,10 +49,10 @@ export default function CustomTabBar() {
     animatedWidth.value = 0;
     
     animatedWidth.value = withTiming(tabWidth * 0.8, {
-      duration: 800,
+      duration: isReducedMotionEnabled ? 0 : 800,
       easing: Easing.bezier(0.25, 0.1, 0.25, 1),
     });
-  }, [currentPath]);
+  }, [currentPath, isReducedMotionEnabled]);
 
   return (
     <View style={styles.container}>

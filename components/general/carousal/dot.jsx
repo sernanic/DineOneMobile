@@ -4,11 +4,21 @@ import Animated, {
   useAnimatedStyle,
   interpolate,
   Extrapolation,
+  useReducedMotion,
 } from 'react-native-reanimated';
 import Colors from '../../../constants/Colors';
 
 const Dot = ({x, index, size}) => {
+  const isReducedMotion = useReducedMotion();
+
   const animatedDotStyle = useAnimatedStyle(() => {
+    if (isReducedMotion) {
+      return {
+        width: x.value === index * size ? 20 : 10,
+        opacity: x.value === index * size ? 1 : 0.5,
+      };
+    }
+
     const widthAnimation = interpolate(
       x.value,
       [(index - 1) * size, index * size, (index + 1) * size],

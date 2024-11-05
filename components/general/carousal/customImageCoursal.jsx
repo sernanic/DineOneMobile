@@ -4,6 +4,7 @@ import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
   useAnimatedRef,
+  isReduceMotionEnabled,
 } from 'react-native-reanimated';
 import Pagination from './pagination';
 import CustomImage from './customImage';
@@ -39,15 +40,29 @@ const CustomImageCarousal = ({data, autoPlay, pagination}) => {
   });
 
   useEffect(() => {
+    const checkReducedMotion = async () => {
+      const isReduced = await isReduceMotionEnabled();
+      if (isReduced) {
+        setIsAutoPlay(false);
+      }
+    };
+    checkReducedMotion();
+  }, []);
+
+  useEffect(() => {
     if (isAutoPlay === true) {
       let _offSet = offSet.value;
       interval.current = setInterval(() => {
-        if (_offSet >= Math.floor(SIZE * (data.length - 1) - 10)) {
-          _offSet = 0;
-        } else {
-          _offSet = Math.floor(_offSet + SIZE);
-        }
-        scrollViewRef.current.scrollTo({x: _offSet, y: 0});
+        isReduceMotionEnabled().then(isReduced => {
+          if (!isReduced) {
+            if (_offSet >= Math.floor(SIZE * (data.length - 1) - 10)) {
+              _offSet = 0;
+            } else {
+              _offSet = Math.floor(_offSet + SIZE);
+            }
+            scrollViewRef.current?.scrollTo({x: _offSet, y: 0});
+          }
+        });
       }, 5000);
     } else {
       clearInterval(interval.current);

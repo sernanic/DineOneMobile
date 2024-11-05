@@ -1,6 +1,6 @@
 import { View, Dimensions,FlatList,StyleSheet,TouchableOpacity,Text,Modal,TextInput } from 'react-native'
 import React,{useState,useEffect} from 'react'
-import Header from '@/components/home/header';
+import Header from '@/components/general/header';
 import useCartStore from '@/store/cartStore';
 import Colors from '@/constants/Colors';
 import CartItem from '@/components/cart/CartItem';
@@ -118,12 +118,30 @@ const Cart = () => {
                             }}
                             originWhitelist={['http://*', 'https://*']}
                             onMessage={(event) => {
+                                console.log('event', event);
                                 const data = JSON.parse(event.nativeEvent.data);
                                 if (data.type === 'PAYMENT_SUCCESS') {
-                                  // Handle the token if needed
-                                  console.log('Payment token:', data.token);
-                                  // Close the modal
-                                  setIsCheckoutOpen(false);
+                                    console.log('payment token', data.token);
+                                    // Send products data and payment token to process payment endpoint
+                                    fetch('http://localhost:4000/api/client/10/payment/process', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                            products: products,
+                                            paymentToken: data.token
+                                        })
+                                    })
+                                    .then(response => response.json())
+                                    .then(result => {
+                                        console.log('Payment processed:', result);
+                                        setIsCheckoutOpen(false);
+                                    })
+                                    .catch(error => {
+                                        console.error('Error processing payment:', error);
+                                        setIsCheckoutOpen(false);
+                                    });
                                 }
                             }}
                         />

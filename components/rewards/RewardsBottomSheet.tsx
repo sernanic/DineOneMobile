@@ -3,7 +3,7 @@ import React, { forwardRef, useCallback, useLayoutEffect, useMemo } from 'react'
 import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import Colors from '@/constants/Colors';
 import FullWidthImage from '@/components/section/SectionImage'
-import Animated, { useSharedValue } from 'react-native-reanimated';
+import Animated, { useSharedValue, useReduceMotion } from 'react-native-reanimated';
 
 
 export type Ref = BottomSheetModal;
@@ -26,11 +26,17 @@ const BottomSheet = forwardRef<Ref, { rewardItem: RewardItemType }>((props, ref)
     const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, []);
     const { dismiss } = useBottomSheetModal();
     const { rewardItem } = props;
-    const width = useSharedValue(100);
+    const isReduceMotionEnabled = useReduceMotion();
+    
+    // Adjust animation based on reduced motion preference
+    const width = useSharedValue(isReduceMotionEnabled ? 0 : 100);
 
     const handlePress = () => {
-        width.value = width.value + 50;
-      };
+        // Add conditional animation
+        if (!isReduceMotionEnabled) {
+            width.value = width.value + 50;
+        }
+    };
 
     const handleCloseModal = () => {
         dismiss();

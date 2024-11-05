@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Text, View, StyleSheet, FlatList, Dimensions,TouchableWithoutFeedback } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import Header from '@/components/section/SectionHeader';
+// import Header from '@/components/section/SectionHeader';
 import axios from 'axios'; // Make sure to install axios if you haven't already
 import SectionItem from '@/components/section/sectionItem';
 import SearchInput from '@/components/general/SearchInput';
 import HorizontalSubsectionList from '@/components/section/HorizontalSubsectionList';
 import Colors from '@/constants/Colors';
+import Header from '@/components/general/header';
 
 
 import {MotiView} from 'moti';
@@ -106,13 +107,19 @@ const Section = () => {
     };
 
     return (
-        <View style={{ padding: 5, backgroundColor: '#fff' }}>
-            <Header title={section} handleExit={handleExit} />
+      <>
+     
+      <Header title='Menu' handleExit={handleExit} />
+      <View style={{ padding: 5, backgroundColor: '#fff' }}>
             {/* TODO: make name Dynamic */}
             {/* <Text style={styles.profileNameStyle}>Hi Nicolas</Text>
             <Text style={styles.FindYourFoodStyle}>Find Your Food</Text> */}
+            <View style={{paddingTop: 15}}>
+
+            
             <SearchInput searchValue={searchText}
                 onSearchChange={setSearchText} isShowFilterIcon={true} />
+              </View>
             <HorizontalSubsectionList
                 subsections={subSections}
                 onSelectSubsection={setSelectedSubsection}
@@ -142,6 +149,7 @@ const Section = () => {
                 )}
             />
         </View>
+        </>
     );
 };
 

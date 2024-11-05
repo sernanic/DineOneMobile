@@ -4,6 +4,7 @@ import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gor
 import useCartStore from '@/store/cartStore';
 import Animated from 'react-native-reanimated';
 import axios from 'axios';
+import { useReducedMotion } from 'react-native-reanimated';
 
 import Header from "./BottomSheetComponents/Header";
 import Content from './BottomSheetComponents/Content';
@@ -23,6 +24,8 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
     const [modifierGroups, setModifierGroups] = useState<ModifierGroup[]>([]);
     const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
     const [selectedModifiers, setSelectedModifiers] = useState<Set<string>>(new Set());
+
+    const shouldReduceMotion = useReducedMotion();
 
     useEffect(() => {
         setTotalPrice(item.price * localQuantity);
@@ -80,7 +83,11 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
                 backgroundColor: "transparent"
             }}
             overDragResistanceFactor={0}
-            enableOverDrag={true}
+            enableOverDrag={!shouldReduceMotion}
+            enablePanDownToClose={!shouldReduceMotion}
+            animationConfigs={{
+                duration: shouldReduceMotion ? 0 : 250
+            }}
             ref={ref}
             snapPoints={snapPoints}
             backdropComponent={renderBackdrop}
