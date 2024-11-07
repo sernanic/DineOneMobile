@@ -11,7 +11,13 @@ const MenuScreen = () => {
     const router = useRouter();
     const { section } = useLocalSearchParams();
     const [searchText, setSearchText] = useState('');
-    const { sectionItems, subSections, selectedSubsection, filteredItems } = useMenuData(section);
+    const { 
+        sectionItems, 
+        subSections, 
+        selectedSubsection, 
+        setSelectedSubsection, 
+        filteredItems 
+    } = useMenuData(section);
 
     const handleSearch = (text) => {
         setSearchText(text);

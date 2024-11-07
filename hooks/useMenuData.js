@@ -11,6 +11,16 @@ const useMenuData = (section) => {
         hasLoaded: false
     });
 
+    const setSelectedSubsection = (subsection) => {
+        setMenuState(prevState => ({
+            ...prevState,
+            selectedSubsection: subsection,
+            filteredItems: subsection.id === 0 
+                ? prevState.sectionItems 
+                : prevState.sectionItems.filter(item => item.subsectionId === subsection.id)
+        }));
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -55,7 +65,10 @@ const useMenuData = (section) => {
         fetchData();
     }, [section]);
 
-    return menuState;
+    return {
+        ...menuState,
+        setSelectedSubsection
+    };
 };
 
 export default useMenuData; 
