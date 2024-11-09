@@ -9,6 +9,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MERCHANT_ID, CLIENT_ID,API_BASE_URL } from '@/constants/Config';
 import axios from 'axios';
 import { useCustomerStore } from '@/store/customerStore';
+import { useCustomerData } from '@/hooks/useCustomerData';
 
 type RootStackParamList = {
   index: undefined;
@@ -25,6 +26,7 @@ export default function Auth() {
     session: state.session,
     setSession: state.setSession,
   }));
+  const { fetchCustomerData } = useCustomerData();
 
   async function signInWithEmail() {
     setLoading(true)
@@ -43,31 +45,19 @@ export default function Auth() {
         throw new Error('No session data available');
       }
 
-      const response = await axios.get(
-        `http://127.0.0.1:4000/api/v1/client/${CLIENT_ID}/merchant/${MERCHANT_ID}/customers`,
-        {
-          params: {
-            authUUID: session.user.id
-          },
-          headers: {
-            'Accept': 'application/json'
-          }
-        }
-      );
-      if(response.status === 200)
-      {
-        const customerData = response.data.customer;
-        setSession(session)
-        useCustomerStore.getState().setCustomer(customerData);
-        navigation.navigate('index')
+      const { data: customerData, error: customerError } = await fetchCustomerData(session.user.id);
+      
+      if (customerError) {
+        Alert.alert('Error', customerError);
+        return;
       }
+
+      setSession(session);
+      useCustomerStore.getState().setCustomer(customerData);
+      navigation.navigate('index');
+      
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errorMessage = error.response?.data?.error || 'An unexpected error occurred';
-        Alert.alert('Error', errorMessage);
-      } else {
-        Alert.alert('Error', 'An unexpected error occurred');
-      }
+      Alert.alert('Error', 'An unexpected error occurred');
     } finally {
       setLoading(false)
     }

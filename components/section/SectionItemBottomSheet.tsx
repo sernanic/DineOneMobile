@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useMemo, useState, useEffect } from 'react';
+import React, { forwardRef, useCallback, useMemo, useState, useEffect, Ref } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import useCartStore from '@/store/cartStore';
@@ -10,6 +10,8 @@ import Header from "./BottomSheetComponents/Header";
 import Content from './BottomSheetComponents/Content';
 import BottomActions from './BottomSheetComponents/BottomActions';
 import { BottomSheetProps, ModifierGroup } from './types';
+import { CLIENT_ID, MERCHANT_ID } from '@/constants/Config';
+import { useCustomerStore } from '@/store/customerStore';
 
 const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
     const snapPoints = useMemo(() => ['94%'], []);
@@ -26,7 +28,8 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
     const [selectedModifiers, setSelectedModifiers] = useState<Set<string>>(new Set());
 
     const shouldReduceMotion = useReducedMotion();
-
+    const customer = useCustomerStore((state) => state?.customer || {});
+    console.log("customer bottomsheet",customer)
     useEffect(() => {
         setTotalPrice(item.price * localQuantity);
     }, [item, localQuantity]);
@@ -74,6 +77,10 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
         dismiss();
     }, [localQuantity, product, item, addProduct, removeProduct, dismiss, ref]);
 
+    const isItemFavorited = useMemo(() => {
+        return customer?.favorites?.some((fav: { itemId: string}) => fav.itemId === item.itemId) || false;
+    }, [customer?.favorites, item.itemId]);
+
     return (
         <BottomSheetModal
             handleIndicatorStyle={{ display: 'none' }}
@@ -96,7 +103,7 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
             }}
         >
             <View style={styles.contentContainer}>
-                <Header item={item} handleCloseModal={handleCloseModal} />
+                <Header item={item} handleCloseModal={handleCloseModal} clientId={CLIENT_ID} merchantId={MERCHANT_ID} authUUID={customer.authUUID} isFavorited={isItemFavorited} />
                 <Content 
                     item={item}
                     modifierGroups={modifierGroups}

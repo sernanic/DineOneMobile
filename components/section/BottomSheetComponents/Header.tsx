@@ -5,17 +5,78 @@ import Animated, { useSharedValue, useAnimatedScrollHandler, interpolate, useRed
 import { LinearGradient } from 'expo-linear-gradient';
 import { BottomSheetProps } from '../types';
 import ReadMoreText from '@/components/general/ReadMoreText';
+import axios from 'axios';
+import { useCustomerStore } from '@/store/customerStore';
+import { MERCHANT_ID, CLIENT_ID,API_BASE_URL } from '@/constants/Config';
 
 interface HeaderProps {
     item: BottomSheetProps['item'];
     handleCloseModal: () => void;
+    clientId: number;
+    merchantId: string;
+    authUUID: string;
+    isFavorited: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ item, handleCloseModal }) => {
+const Header: React.FC<HeaderProps> = ({ item, handleCloseModal, clientId, merchantId, authUUID, isFavorited: initialIsFavorited }) => {
     const shouldReduceMotion = useReducedMotion();
     const scrollX = useSharedValue(0);
     const ITEM_WIDTH = Dimensions.get('window').width;
-    
+    const [isFavorited, setIsFavorited] = React.useState(initialIsFavorited);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const customer = useCustomerStore((state) => state?.customer || {});
+    const setCustomer = useCustomerStore((state) => state.setCustomer);
+
+    const handleFavoritePress = async () => {
+        if (isLoading) return;
+        
+        setIsLoading(true);
+        try {
+            const response = await axios.post(
+                `${API_BASE_URL}/api/v1/client/${clientId}/merchant/${merchantId}/customers/favorites`,
+                {
+                    itemId: item.itemId,
+                    authUUID: authUUID
+                }
+            );
+            
+            if (response.data) {
+                // Toggle the favorite state
+                setIsFavorited(prev => !prev);
+                
+                // Update customer favorites in the store
+                const updatedCustomer = { ...customer };
+                const existingFavorite = customer.favorites?.find((fav: { itemId: string }) => fav.itemId === item.itemId);
+
+                if (existingFavorite) {
+                    // Item exists, remove it from favorites
+                    updatedCustomer.favorites = customer.favorites.filter(
+                        (fav: { itemId: string }) => fav.itemId !== item.itemId
+                    );
+                } else {
+                    // Item doesn't exist, add it to favorites
+                    const newFavorite = {
+                        clientId,
+                        createdAt: new Date().toISOString(),
+                        customerAuthUUID: authUUID,
+                        id: response.data.id,
+                        itemId: item.itemId
+                    };
+                    updatedCustomer.favorites = [...(customer.favorites || []), newFavorite];
+                }
+                
+                setCustomer(updatedCustomer);
+            }
+        } catch (error) {
+            console.error('Failed to toggle favorite:', error);
+            if (axios.isAxiosError(error)) {
+                console.error('Error details:', error.response?.data);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const scrollHandler = useAnimatedScrollHandler({
         onScroll: (event) => {
             if (!shouldReduceMotion) {
@@ -102,8 +163,16 @@ const Header: React.FC<HeaderProps> = ({ item, handleCloseModal }) => {
                     <TouchableOpacity style={styles.overlayButton} onPress={handleCloseModal}>
                         <Ionicons name="close" size={24} color="black" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.overlayButton}>
-                        <Ionicons name="heart-outline" size={24} color="black" />
+                    <TouchableOpacity 
+                        style={styles.overlayButton} 
+                        onPress={handleFavoritePress}
+                        disabled={isLoading}
+                    >
+                        <Ionicons 
+                            name={isFavorited ? "heart" : "heart-outline"} 
+                            size={24} 
+                            color={isFavorited ? "red" : "black"} 
+                        />
                     </TouchableOpacity>
                 </View>
             </View>

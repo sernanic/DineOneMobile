@@ -1,66 +1,56 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, Dimensions, SafeAreaView, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import GeneralHeader from '@/components/general/header';
 import FeaturedCard from '@/components/home/FeaturedCard';
 import EditorChoiceItem from '@/components/home/EditorChoiceItem';
 import { featuredItems, defaultImage } from '@/constants/mockData';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-// import { API_URL } from '@/constants/apiConfig';
+import { API_BASE_URL } from '@/constants/Config';
 import { useCustomerStore } from '@/store/customerStore';
+import { useCustomerData } from '@/hooks/useCustomerData';
+import { useAuthStore } from '@/store/authStore';
+import { useGreeting } from '@/hooks/useGreeting';
+import { usePopularItems } from '@/hooks/usePopularItems';
 
-// Custom hook for greeting logic
-const useGreeting = () => {
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 18) return 'Good Afternoon';
-    return 'Good Evening';
-  };
-
-  const getGreetingIcon = () => {
-    const greeting = getGreeting();
-    return greeting === 'Good Evening' ? 'moon-outline' : 'sunny-outline';
-  };
-
-  return {
-    greeting: getGreeting(),
-    greetingIcon: getGreetingIcon(),
-  };
-};
-
-// Custom hook for popular items
-const usePopularItems = () => {
-  const [popularItems, setPopularItems] = useState([]);
-
-  const fetchPopularItems = async () => {
-    try {
-      const clientId = '10';
-      const merchantId = '6JDE8MZSA6FJ1';
-      const response = await axios.get(`http://127.0.0.1:4000/api/${clientId}/items/popular/${merchantId}`);
-      
-      const { items } = response.data;
-      setPopularItems(Array.isArray(items) ? items : []);
-    } catch (error) {
-      console.error('Error fetching popular items:', error);
-      setPopularItems([]);
-    }
-  };
-
-  useEffect(() => {
-    fetchPopularItems();
-  }, []);
-
-  return popularItems;
-};
 
 const Menu = () => {
   const { greeting, greetingIcon } = useGreeting();
-  const popularItems = usePopularItems();
+  const { popularItems, isLoading, error } = usePopularItems();
   const customer = useCustomerStore((state) => state?.customer || {});
-  
+  const { fetchCustomerData } = useCustomerData();
+  const session = useAuthStore((state) => state.session);
+  console.log("customer", customer)
+  useEffect(() => {
+    const getCustomerData = async () => {
+      if (session?.user?.id && !customer?.firstName) {
+        const { data, error } = await fetchCustomerData(session.user.id);
+        if (data && !error) {
+          useCustomerStore.setState({ customer: data });
+        }
+      }
+    };
+    
+    getCustomerData();
+  }, [session, customer?.firstName, fetchCustomerData]); 
+
+  const renderPopularItems = useMemo(() => {
+    if (isLoading) return <ActivityIndicator size="large" />;
+    if (error) return <Text style={styles.errorText}>Error: {error}</Text>;
+    if (popularItems.length === 0) return <Text>No popular items available</Text>;
+
+    return popularItems.map((item) => (
+      <EditorChoiceItem 
+        key={item.itemId}
+        title={item.name}
+        image={item.images?.[0]?.imageUrl ? { uri: item.images[0].imageUrl } : defaultImage}
+        price={item.price}
+      />
+    ));
+  }, [popularItems, isLoading, error]);
+
   return (
     <>
       <GeneralHeader title="Home" />
@@ -95,18 +85,7 @@ const Menu = () => {
 
           <Text style={styles.sectionTitle}>Popular Items</Text>
           <View style={styles.editorChoiceContainer}>
-            {popularItems.length > 0 ? (
-              popularItems.map((item) => (
-                <EditorChoiceItem 
-                  key={item.itemId}
-                  title={item.name}
-                  image={item.images?.[0]?.imageUrl ? { uri: item.images[0].imageUrl } : defaultImage}
-                  price={item.price}
-                />
-              ))
-            ) : (
-              <Text>No popular items available</Text>
-            )}
+            {renderPopularItems}
           </View>
         </ScrollView>
       </View>
@@ -157,6 +136,11 @@ const styles = StyleSheet.create({
   },
   editorChoiceContainer: {
     paddingHorizontal: 20,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
   },
 });
 

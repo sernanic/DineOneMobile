@@ -1,7 +1,7 @@
 // MenuItem.js
 
 import { Ionicons } from '@expo/vector-icons';
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity,Dimensions } from 'react-native';
 import useCartStore from '../../store/cartStore';
 import { useRouter } from 'expo-router';
@@ -10,6 +10,7 @@ import BottomSheet from './SectionItemBottomSheet';
 import useProductStore from '@/store/selectedProductStore'
 import Colors from '@/constants/Colors';
 import {MotiView} from 'moti';
+import { useCustomerStore } from '@/store/customerStore';
 
 
 interface ImageInterface {
@@ -37,6 +38,12 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
      
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
+    const customer = useCustomerStore((state) => state.customer);
+    
+    const isItemFavorited = useMemo(() => {
+        return customer?.favorites?.some((fav: { itemId: string }) => fav.itemId === item.itemId) || false;
+    }, [customer?.favorites, item.itemId]);
+
     const openModal = (item: any) => {
         bottomSheetRef.current?.present();
         setSelectedProduct(item);
@@ -60,9 +67,15 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
                             source={item.images[0]?.imageUrl ? { uri: item.images[0].imageUrl } : require('@/assets/images/image-product-1-landscape.jpg')}
                             style={styles.itemImage}
                         />
-                        <View style={styles.heartIconContainer}>
-                            <Ionicons name='heart-outline' size={20} color={'black'} />
-                        </View>
+                        {isItemFavorited && (
+                            <View style={styles.heartIconContainer}>
+                                <Ionicons 
+                                    name="heart"
+                                    size={20} 
+                                    color="red"
+                                />
+                            </View>
+                        )}
                     </View>
                     <Text style={styles.itemTitle}>{item?.name.length > 30 ? `${item?.name.substring(0, 30)}...` : item?.name}</Text>
                 </View>
