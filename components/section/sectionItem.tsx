@@ -34,7 +34,6 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
     const { setSelectedProduct } = useProductStore();
     const product = products[item.itemId];
     const quantity = product ? product.quantity : 0;
-    // console.log(item);
      
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 

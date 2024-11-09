@@ -6,8 +6,13 @@ import * as eva from '@eva-design/eva';
 import { Ionicons } from '@expo/vector-icons';
 import CustomDrawerContent from '@/components/drawer/customDrawer'
 import Colors from '../constants/Colors';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
 export default function Layout() {
   return (
+    <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
           <Drawer drawerContent={CustomDrawerContent}
@@ -48,5 +53,6 @@ export default function Layout() {
           </Drawer>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 }

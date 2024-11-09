@@ -29,7 +29,6 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
 
     const shouldReduceMotion = useReducedMotion();
     const customer = useCustomerStore((state) => state?.customer || {});
-    console.log("customer bottomsheet",customer)
     useEffect(() => {
         setTotalPrice(item.price * localQuantity);
     }, [item, localQuantity]);
@@ -56,7 +55,6 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
     }, [dismiss, ref]);
 
     const handleAddToCart = useCallback(() => {
-        console.log('Adding to cart with quantity:', localQuantity);
         const existingQuantity = product ? product.quantity : 0;
         
         if (localQuantity !== existingQuantity) {

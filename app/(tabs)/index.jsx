@@ -22,7 +22,6 @@ const Menu = () => {
   const customer = useCustomerStore((state) => state?.customer || {});
   const { fetchCustomerData } = useCustomerData();
   const session = useAuthStore((state) => state.session);
-  console.log("customer", customer)
   useEffect(() => {
     const getCustomerData = async () => {
       if (session?.user?.id && !customer?.firstName) {

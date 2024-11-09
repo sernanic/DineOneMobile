@@ -35,7 +35,6 @@ export default function Auth() {
         email,
         password,
       });
-      console.log("error",error)
       if (error) {
         Alert.alert(error.message)
         return

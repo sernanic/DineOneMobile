@@ -26,7 +26,6 @@ const withAuth = (WrappedComponent) => {
       const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
         setSession(session);
         setLocalSession(session); // Also update the local state immediately
-        console.log("Session updated:", session); // Log the updated session
       });
 
       // Cleanup subscription on unmount

@@ -85,7 +85,6 @@ const Header: React.FC<HeaderProps> = ({ item, handleCloseModal, clientId, merch
         },
     });
 
-    console.log(item);
     return (
         <Animated.View style={styles.header}>
             <View style={styles.imageContainer}>

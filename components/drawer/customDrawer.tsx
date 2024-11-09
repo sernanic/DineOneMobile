@@ -20,6 +20,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
         { label: 'Menu', path: '/(tabs)/menu', icon: 'restaurant' },
         { label: 'Rewards', path: '/(tabs)/rewards', icon: 'gift' },
         { label: 'Cart', path: '/(tabs)/cart', icon: 'cart' },
+        { label: 'Favorites', path: '/(tabs)/favorites', icon: 'heart' },
     ];
 
     const footerItems = [
@@ -39,7 +40,6 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
             <DrawerContentScrollView {...props} contentContainerStyle={styles.scrollContent}>
                 {drawerItems.map((item) => {
                     const isActive = pathname === item.path;
-                    console.log(`Item ${item.label}:`, { path: item.path, isActive });
                     
                     return (
                         <TouchableOpacity

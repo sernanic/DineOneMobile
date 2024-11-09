@@ -18,7 +18,6 @@ export default function CustomTabBar() {
   const router = useRouter();
   const currentPath = usePathname();
   const tabWidth = width / tabs.length * 1.2;
-  console.log(tabWidth);
 
   const animatedWidth = useSharedValue(0);
   const activeIndex = useSharedValue(0);

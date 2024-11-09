@@ -24,7 +24,6 @@ export const useCheckout = () => {
         body: JSON.stringify({ products, paymentToken })
       });
       const result = await response.json();
-      console.log('Payment processed:', result);
     } catch (error) {
       console.error('Error processing payment:', error);
     } finally {

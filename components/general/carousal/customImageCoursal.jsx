@@ -10,7 +10,6 @@ import Pagination from './pagination';
 import CustomImage from './customImage';
 const CustomImageCarousal = ({data, autoPlay, pagination}) => {
 
-    console.log(data)
   const scrollViewRef = useAnimatedRef(null);
   const interval = useRef();
   const [isAutoPlay, setIsAutoPlay] = useState(autoPlay);

@@ -13,7 +13,6 @@ const SectionItemScreen = () =>
     const { SectionItemParam } = useLocalSearchParams();
     const item = SectionItemParam ? JSON.parse(SectionItemParam) : null;
     const {reduceProduct,addProduct} = useCartStore()
-    console.log(item)
 
     const navigation = useNavigation();
     useLayoutEffect(() => {
