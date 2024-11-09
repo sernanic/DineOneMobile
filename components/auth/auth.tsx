@@ -5,11 +5,22 @@ import { Button, Input } from '@rneui/themed'
 import { useAuthStore } from '@/store/authStore';
 import Colors from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MERCHANT_ID, CLIENT_ID,API_BASE_URL } from '@/constants/Config';
+import axios from 'axios';
+import { useCustomerStore } from '@/store/customerStore';
+
+type RootStackParamList = {
+  index: undefined;
+  SignUp: undefined;
+  // ... add other screens as needed
+};
+
 export default function Auth() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { session, setSession } = useAuthStore(state => ({
     session: state.session,
     setSession: state.setSession,
@@ -17,15 +28,49 @@ export default function Auth() {
 
   async function signInWithEmail() {
     setLoading(true)
-    const { data:{session}, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { data: { session }, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      console.log("error",error)
+      if (error) {
+        Alert.alert(error.message)
+        return
+      }
 
-    if (error) Alert.alert(error.message)
-    setSession(session)
-    setLoading(false)
-    console.log("session",session)
+      if (!session) {
+        throw new Error('No session data available');
+      }
+
+      const response = await axios.get(
+        `http://127.0.0.1:4000/api/v1/client/${CLIENT_ID}/merchant/${MERCHANT_ID}/customers`,
+        {
+          params: {
+            authUUID: session.user.id
+          },
+          headers: {
+            'Accept': 'application/json'
+          }
+        }
+      );
+      if(response.status === 200)
+      {
+        const customerData = response.data.customer;
+        setSession(session)
+        useCustomerStore.getState().setCustomer(customerData);
+        navigation.navigate('index')
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.error || 'An unexpected error occurred';
+        Alert.alert('Error', errorMessage);
+      } else {
+        Alert.alert('Error', 'An unexpected error occurred');
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

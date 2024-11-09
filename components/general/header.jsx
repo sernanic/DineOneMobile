@@ -1,16 +1,28 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
+import { useNavigation } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
 
 const Header = ({ title, tier = 'Bronze', showTier = true }) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.header}>
-      <Text style={styles.headerTitle}>{title}</Text>
+      <View style={styles.leftContainer}>
+        <TouchableOpacity 
+          style={styles.menuButton} 
+          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        >
+          <Ionicons name="menu" size={24} color="white" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>{title}</Text>
+      </View>
       {showTier && (
         <View style={styles.tierContainer}>
           <Text style={styles.tierText}>{tier}</Text>
-          <Ionicons name="diamond-outline" size={24} color="black" />
+          <Ionicons name="diamond-outline" size={24} color="white" />
         </View>
       )}
     </View>
@@ -39,6 +51,14 @@ const styles = StyleSheet.create({
   tierText: {
     fontSize: 18,
     color: 'white',
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  menuButton: {
+    padding: 4,
   },
 });
 

@@ -6,19 +6,26 @@ import { Button, Input } from '@rneui/themed'
 import { useAuthStore } from '@/store/authStore'
 import Colors from '@/constants/Colors'
 import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
+import { useCustomerStore } from '@/store/customerStore'
+
 export default function SignUp() {
   const [loading, setLoading] = useState(false)
   const { setSession } = useAuthStore(state => ({ setSession: state.setSession }))
+  const { setCustomer } = useCustomerStore(state => ({ setCustomer: state.setCustomer }))
   
   const { control, handleSubmit, formState: { errors }, watch } = useForm({
     defaultValues: {
       email: '',
+      firstName: '',
+      lastName: '',
       password: '',
       confirmPassword: ''
     }
   })
   const navigation = useNavigation()
-
+  const clientId = 10
+  const merchantId = '6JDE8MZSA6FJ1'
   // Get password value for comparison
   const password = watch('password')
 
@@ -42,7 +49,34 @@ export default function SignUp() {
       } else if (!session) {
         Alert.alert("Sign Up Successful", "Please check your inbox for email verification!")
       } else {
-        setSession(session)
+        try {
+          const customerData = {
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            merchantId: merchantId,
+            clientId: clientId,
+            authUUID: session.user.id
+          }
+          
+          const response = await axios.post(
+            `http://127.0.0.1:4000/api/v1/client/${clientId}/merchant/${merchantId}/customers`,
+            customerData
+          )
+          if (response.status === 200 || response.status === 201) {
+            setCustomer(response.data.customer)
+            setSession(session)
+            navigation.navigate('index')
+          } else {
+            throw new Error('Failed to create customer profile')
+          }
+        } catch (customerError) {
+          console.error("Error creating customer:", customerError)
+          Alert.alert(
+            "Account Created",
+            "Your account was created but there was an issue setting up your profile. Please try logging in."
+          )
+        }
       }
     } catch (error) {
       console.error("Unexpected error during sign up:", error)
@@ -61,6 +95,46 @@ export default function SignUp() {
         </View>
 
         <View style={styles.inputContainer}>
+          <Controller
+            control={control}
+            name="firstName"
+            rules={{
+              required: 'First name is required'
+            }}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder="First Name"
+                leftIcon={{ type: 'font-awesome', name: 'user', color: '#ddd', size: 20 }}
+                onChangeText={onChange}
+                value={value}
+                containerStyle={styles.inputWrapper}
+                inputContainerStyle={styles.inputField}
+                inputStyle={styles.inputText}
+                errorMessage={errors.firstName?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="lastName"
+            rules={{
+              required: 'Last name is required'
+            }}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder="Last Name"
+                leftIcon={{ type: 'font-awesome', name: 'user', color: '#ddd', size: 20 }}
+                onChangeText={onChange}
+                value={value}
+                containerStyle={styles.inputWrapper}
+                inputContainerStyle={styles.inputField}
+                inputStyle={styles.inputText}
+                errorMessage={errors.lastName?.message}
+              />
+            )}
+          />
+
           <Controller
             control={control}
             name="email"
@@ -159,21 +233,6 @@ export default function SignUp() {
           loading={loading}
         />
 
-        <Text style={styles.orText}>Or</Text>
-
-        <Button 
-          icon={{
-            name: 'google',
-            type: 'font-awesome',
-            size: 18,
-            color: '#757575',
-          }}
-          title="Continue with google"
-          buttonStyle={styles.googleButton}
-          titleStyle={styles.googleButtonText}
-          type="outline"
-        />
-
         <View style={styles.footerContainer}>
           <Text style={styles.noAccountText}>Already have an account? </Text>
           <Text 
@@ -240,23 +299,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-  },
-  orText: {
-    textAlign: 'center',
-    color: '#757575',
-    marginVertical: 20,
-  },
-  googleButton: {
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    paddingVertical: 12,
-    borderColor: '#ddd',
-    borderWidth: 1,
-  },
-  googleButtonText: {
-    color: '#757575',
-    fontSize: 16,
-    marginLeft: 10,
   },
   footerContainer: {
     flexDirection: 'row',

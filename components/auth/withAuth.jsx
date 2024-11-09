@@ -44,7 +44,7 @@ const withAuth = (WrappedComponent) => {
       return () => clearTimeout(timeout);
     }, []);
 
-    console.log("Current local session:", localSession); // Log the local session value
+     // Log the local session value
 
     if (isLoading) {
       return (

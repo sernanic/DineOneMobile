@@ -9,6 +9,7 @@ import { featuredItems, defaultImage } from '@/constants/mockData';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 // import { API_URL } from '@/constants/apiConfig';
+import { useCustomerStore } from '@/store/customerStore';
 
 // Custom hook for greeting logic
 const useGreeting = () => {
@@ -58,6 +59,7 @@ const usePopularItems = () => {
 const Menu = () => {
   const { greeting, greetingIcon } = useGreeting();
   const popularItems = usePopularItems();
+  const customer = useCustomerStore((state) => state?.customer || {});
   
   return (
     <>
@@ -73,7 +75,7 @@ const Menu = () => {
                 <Ionicons name={greetingIcon} size={24} color="#666" />
                 <Text style={styles.greeting}>{greeting}</Text>
               </View>
-              <Text style={styles.userName}>Alena Sabyan</Text>
+              <Text style={styles.userName}>{customer?.firstName || 'Guest'} {customer?.lastName || ''}</Text>
             </View>
           </View>
 
