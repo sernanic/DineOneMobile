@@ -79,7 +79,7 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
                     <Text style={styles.itemTitle}>{item?.name.length > 30 ? `${item?.name.substring(0, 30)}...` : item?.name}</Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <Text style={styles.priceText}>${item.price.toFixed(2)}</Text>
+                    <Text style={styles.priceText}>${(item.price / 100).toFixed(2)}</Text>
                 </View>
             </View>
             </MotiView>
@@ -127,9 +127,9 @@ const styles = StyleSheet.create({
     item: {
         flexDirection: 'column',
         alignItems: 'center',
-        height: 198,
+        height: 228,
         justifyContent: 'space-between',
-        margin: 10,
+        margin: 5,
         backgroundColor: "#FFF",
         borderRadius: 16,
         borderWidth: 1,
@@ -142,12 +142,12 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 1,
         shadowRadius: 16,
-        elevation: 5, // for Android
+        elevation: 5,
     },
     imageContainer: {
         position: 'relative',
         width: '85%',
-        height: 100,
+        height: 130,
         marginTop: 12,
     },
     itemImage: {
@@ -224,10 +224,10 @@ const styles = StyleSheet.create({
         
     },
     listContainer: {
-        width: Dimensions.get('window').width / 2 - 20,
-        margin: 10,
+        width: Dimensions.get('window').width / 2 - 10,
+        margin: 5,
         borderRadius: 20,
-      },
+    },
 });
 
 export default SectionItem;

@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     position: 'relative',
+    paddingTop: 15,
   },
   listContent: {
     paddingHorizontal: 20,

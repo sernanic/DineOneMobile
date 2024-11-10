@@ -9,11 +9,12 @@ const CartItem = ({ item }) => {
     const handleIncrement = () => addProduct(item);
     const handleDecrement = () => reduceProduct(item);
     const handleRemoval = () => removeProduct(item);
+    console.log("item", item)
 
     return (
         <View style={styles.cardContainer}>
             <Image
-                source={{ uri: item.image || 'https://via.placeholder.com/80' }}
+                source={{ uri: item.images[0]?.imageUrl || 'https://via.placeholder.com/80' }}
                 style={styles.image}
             />
             
@@ -29,7 +30,7 @@ const CartItem = ({ item }) => {
                             <Text style={styles.quantityButtonText}>+</Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={styles.price}>${item.price}</Text>
+                    <Text style={styles.price}>${(item.price / 100).toFixed(2)}</Text>
                 </View>
             </View>
         </View>

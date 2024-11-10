@@ -37,7 +37,7 @@ export default function CustomTabBar() {
     left: (activeIndex.value * tabWidth) + (tabWidth - tabWidth * 0.8) / 2 - 
       (activeIndex.value === 1 ? 45 : 0) -  // Added offset for Menu
       (activeIndex.value > 1 ? 30 + (activeIndex.value - 1) * 15 : 0) - 
-      (activeIndex.value === tabs.length - 1 ? 35 : 0) - 
+      (activeIndex.value === tabs.length - 1 ? 15 : 0) - 
       (activeIndex.value === 2 ? 25 : 0),
   }));
 
@@ -94,15 +94,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     width: width,
-    height: 70,
+    height: 100,
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
     position: 'absolute',
-    bottom: 40,
-    borderRadius: 30,
-    width: '95%',
+    bottom: 0,
+    width: width,
     alignSelf: 'center',
+    borderRadius: 0,
     overflow: 'hidden', 
     //shadowColor: '#000',
     // shadowOffset: {
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   tab: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 20,
     zIndex: 1,

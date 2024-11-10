@@ -36,7 +36,7 @@ const BottomActions = ({ localQuantity, setLocalQuantity, totalPrice, handleAddT
                     onPress={handleAddToCart}
                 >
                     <Text style={styles.addToCartText}>
-                        Add To Bag • ${totalPrice.toFixed(2)}
+                        Add To Bag • ${(totalPrice / 100).toFixed(2)}
                     </Text>
                 </TouchableOpacity>
             </View>

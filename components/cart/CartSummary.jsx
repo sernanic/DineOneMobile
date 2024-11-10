@@ -3,23 +3,27 @@ import React from 'react';
 import Colors from '@/constants/Colors';
 
 const CartSummary = ({ totalPrice, onCheckout }) => {
-  const shippingCost = 6.00;
-  const totalAmount = (parseFloat(totalPrice) + shippingCost).toFixed(2);
+  const shippingCostInCents = 600; // $6.00 in cents
+  const totalAmountInCents = totalPrice + shippingCostInCents;
+  
+  const formatPriceInDollars = (cents) => {
+    return (cents / 100).toFixed(2);
+  };
 
   return (
     <View style={styles.summaryContainer}>
       <View style={styles.summaryCard}>
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Subtotal</Text>
-          <Text style={styles.summaryValue}>${totalPrice}</Text>
+          <Text style={styles.summaryValue}>${formatPriceInDollars(totalPrice)}</Text>
         </View>
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Shipping</Text>
-          <Text style={styles.summaryValue}>${shippingCost.toFixed(2)}</Text>
+          <Text style={styles.summaryValue}>${formatPriceInDollars(shippingCostInCents)}</Text>
         </View>
         <View style={[styles.summaryRow, styles.totalRow]}>
           <Text style={styles.totalLabel}>Total amount</Text>
-          <Text style={styles.totalValue}>${totalAmount}</Text>
+          <Text style={styles.totalValue}>${formatPriceInDollars(totalAmountInCents)}</Text>
         </View>
         <TouchableOpacity style={styles.checkoutButton} onPress={onCheckout}>
           <Text style={styles.checkoutButtonText}>Complete Payment</Text>
