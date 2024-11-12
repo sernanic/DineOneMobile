@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import useCartStore from '@/store/cartStore';
+
 
 export const useCheckout = () => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const { products } = useCartStore();
 
   const handlePaymentMessage = async (event) => {
     try {
