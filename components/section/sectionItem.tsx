@@ -25,6 +25,7 @@ interface SectionItemProps {
         price: number;
         images: ImageInterface[];
         subsectionId: string;
+        calories?: number;
     };
     index:number;
 }
@@ -49,39 +50,50 @@ const SectionItem: React.FC<SectionItemProps> = ({ item,index }) => {
     };
 
     return (
-
-        <TouchableOpacity  onPress={() => openModal(item)}>
+        <TouchableOpacity onPress={() => openModal(item)}>
             <MotiView
-            key={item.itemId} 
-            style={styles.listContainer}
-            from={{opacity: 0, translateY: 50}}
-            animate={{opacity: 1, translateY: 0}}
-            transition={{delay: 500 + index * 200}}>
-            <View style={styles.item}>
-                <View style={{flex:1,flexDirection:'column',width:"100%",alignItems: 'center',}}>
+                key={item.itemId} 
+                style={styles.listContainer}
+                from={{opacity: 0, translateY: 20}}
+                animate={{opacity: 1, translateY: 0}}
+                transition={{
+                    type: 'timing',
+                    duration: 350,
+                    delay: 150 + index * 100
+                }}>
+                <View style={styles.item}>
                     <BottomSheet ref={bottomSheetRef} item={item}/>
-
+                    
+                    {/* Image Section */}
                     <View style={styles.imageContainer}>
                         <Image
-                            source={item.images[0]?.imageUrl ? { uri: item.images[0].imageUrl } : require('@/assets/images/image-product-1-landscape.jpg')}
+                            source={item.images[0]?.imageUrl 
+                                ? { uri: item.images[0].imageUrl } 
+                                : require('@/assets/images/image-product-1-landscape.jpg')}
                             style={styles.itemImage}
                         />
                         {isItemFavorited && (
                             <View style={styles.heartIconContainer}>
-                                <Ionicons 
-                                    name="heart"
-                                    size={20} 
-                                    color="red"
-                                />
+                                <Ionicons name="heart" size={20} color="red"/>
                             </View>
                         )}
                     </View>
-                    <Text style={styles.itemTitle}>{item?.name.length > 30 ? `${item?.name.substring(0, 30)}...` : item?.name}</Text>
+
+                    {/* Content Section */}
+                    <View style={styles.contentContainer}>
+                        <Text style={styles.itemTitle}>
+                            {item?.name.length > 25 ? `${item?.name.substring(0, 25)}...` : item?.name}
+                        </Text>
+                        <View style={styles.detailsContainer}>
+                            <View style={styles.priceCaloriesRow}>
+                                <Text style={styles.priceText}>${(item.price / 100).toFixed(2)}</Text>
+                                <View style={styles.caloriesChip}>
+                                    <Text style={styles.caloriesText}>{item.calories || 500} cal</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <Text style={styles.priceText}>${(item.price / 100).toFixed(2)}</Text>
-                </View>
-            </View>
             </MotiView>
         </TouchableOpacity>
     );
@@ -125,56 +137,55 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     item: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        height: 228,
-        justifyContent: 'space-between',
-        margin: 5,
+        height: 240,
         backgroundColor: "#FFF",
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: '#FBFBFB',
-        width: 175,
-        shadowColor: 'rgba(6, 51, 54, 0.10)',
+        borderRadius: 14,
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 1,
         },
-        shadowOpacity: 1,
-        shadowRadius: 16,
-        elevation: 5,
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        elevation: 3,
     },
     imageContainer: {
-        position: 'relative',
-        width: '85%',
-        height: 130,
-        marginTop: 12,
+        width: '100%',
+        height: 140,
+        borderTopLeftRadius: 14,
+        borderTopRightRadius: 14,
+        overflow: 'hidden',
     },
     itemImage: {
-        resizeMode: 'cover',
-        borderRadius: 16,
         width: '100%',
         height: '100%',
+        resizeMode: 'cover',
     },
     heartIconContainer: {
         position: 'absolute',
-        top: 5,
-        right: 5,
-        backgroundColor: 'white',
-        borderRadius: 12,
-        padding: 4,
+        top: 8,
+        right: 8,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 16,
+        padding: 6,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
     },
     itemTextContainer: {
         marginLeft: 10,
     },
     itemTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        paddingBottom: 10,
-        marginTop:10,
-        fontFamily:'sofia-pro',
-        width:'100%',
-        paddingLeft:12
+        fontSize: 17,
+        fontWeight: '600',
+        color: '#000000',
+        marginBottom: 6,
+        letterSpacing: -0.4,
+        textAlign: 'left',
     },
     itemPrice: {
         fontSize: 14,
@@ -213,20 +224,40 @@ const styles = StyleSheet.create({
         padding: 5
     },
     priceText: {
-      
-        color: '#97A2B0',  // Equivalent to var(--Neutral-Grey-2)
-        fontFamily: 'Sofia Pro',  // Make sure this font is correctly installed and linked
-        fontSize: 14,
-        fontStyle: 'normal',
-        fontWeight: '400',
-        lineHeight: 20.3,  // Since line-height is in px, use the exact value
-        marginBottom:12
-        
+        fontSize: 15,
+        color: '#8E8E93',
+        fontWeight: '500',
     },
     listContainer: {
-        width: Dimensions.get('window').width / 2 - 10,
-        margin: 5,
+        width: Dimensions.get('window').width / 2 - 24,
+        margin: 12,
         borderRadius: 20,
+    },
+    caloriesText: {
+        fontSize: 13,
+        color: '#8E8E93',
+        fontWeight: '400',
+    },
+    detailsContainer: {
+        marginTop: 'auto',
+    },
+    contentContainer: {
+        padding: 12,
+        paddingTop: 16,
+        flex: 1,
+        justifyContent: 'space-between',
+        height: 100,
+    },
+    priceCaloriesRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    caloriesChip: {
+        backgroundColor: '#F2F2F7',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 12,
     },
 });
 

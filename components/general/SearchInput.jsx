@@ -6,21 +6,21 @@ import Colors from '@/constants/Colors';
 const SearchInput = ({ searchValue, onSearchChange, isShowFilterIcon }) => {
     return (
         <View style={styles.searchContainer}>
-            <TouchableOpacity style={{padding: 5}}>
-                <Ionicons name="search" size={20} color={Colors.primary} />
-            </TouchableOpacity>
+            <View style={styles.searchIconWrapper}>
+                <Ionicons name="search" size={22} color={Colors.primary} />
+            </View>
             <TextInput
                 style={styles.input}
-                placeholder="search food..."
+                placeholder="Search food..."
+                placeholderTextColor="#9EA3AE"
                 value={searchValue}
                 onChangeText={onSearchChange}
             />
-            {/* {isShowFilterIcon && (
-                
-                <TouchableOpacity style={styles.iconContainer}>
-                    <Ionicons name="options-outline" size={20} color="#fff" />
+            {isShowFilterIcon && (
+                <TouchableOpacity style={styles.filterButton}>
+                    <Ionicons name="options-outline" size={20} color={Colors.primary} />
                 </TouchableOpacity>
-            )} */}
+            )}
         </View>
     );
 };
@@ -29,28 +29,39 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'white',
-        borderRadius: 8,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        marginLeft:15,
-        marginRight:15,
-        height:55,
+        backgroundColor: '#FFFFFF',
         borderRadius: 16,
-        borderWidth: 2,
-        borderColor: '#E6EBF2',  
-        backgroundColor: '#FFFFFF'
-      },
+        marginHorizontal: 16,
+        height: 56,
+        borderWidth: 1,
+        borderColor: '#E6EBF2',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+    },
+    searchIconWrapper: {
+        padding: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     input: {
         flex: 1,
-        paddingVertical: 10,
-        paddingHorizontal: 5,
-        fontSize:18
+        fontSize: 16,
+        fontWeight: '400',
+        color: '#1A1D1E',
+        paddingVertical: 12,
+        paddingRight: 12,
     },
-    iconContainer: {
-        padding: 5,
-        backgroundColor:Colors.primary,
-        borderRadius:8
+    filterButton: {
+        padding: 12,
+        marginRight: 8,
+        backgroundColor: '#F5F6FA',
+        borderRadius: 12,
     },
 });
 
