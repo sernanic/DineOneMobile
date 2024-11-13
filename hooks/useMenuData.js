@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 const useMenuData = (section) => {
     const [selectedSubsection, setSelectedSubsectionState] = useState(null);
+    const [searchText, setSearchText] = useState('');
+    const [filteredItems, setFilteredItems] = useState([]);
 
     // Using React Query for data fetching and caching
     const { data: menuData, isLoading } = useQuery({
@@ -11,9 +13,9 @@ const useMenuData = (section) => {
         queryFn: async () => {
             const response = await axios.get('http://127.0.0.1:4000/api/10/categories/6JDE8MZSA6FJ1');
             const { categories } = response.data;
-            
             const transformedSubSections = categories.map(category => ({
                 id: category.categoryId,
+                image: category.imageUrl,
                 name: category.name,
                 section: section
             }));
@@ -50,12 +52,18 @@ const useMenuData = (section) => {
         setSelectedSubsectionState(subsection);
     };
 
-    // Compute filtered items based on selected subsection
-    const filteredItems = menuData && selectedSubsection
-        ? selectedSubsection.id === 0 
-            ? menuData.sectionItems 
-            : menuData.sectionItems.filter(item => item.subsectionId === selectedSubsection.id)
-        : [];
+    useEffect(() => {
+        if (!menuData?.sectionItems) return;
+        
+        // Filter items based on both searchText and selectedSubsection
+        const filtered = menuData.sectionItems.filter(item => {
+            const matchesSearch = item.name.toLowerCase().includes(searchText.toLowerCase());
+            const matchesSubsection = !selectedSubsection || selectedSubsection.id === 0 || 
+                                    item.subsectionId === selectedSubsection.id;
+            return matchesSearch && matchesSubsection;
+        });
+        setFilteredItems(filtered);
+    }, [searchText, selectedSubsection, menuData?.sectionItems]);
 
     return {
         sectionItems: menuData?.sectionItems ?? [],
@@ -64,6 +72,7 @@ const useMenuData = (section) => {
         selectedSubsection: selectedSubsection || (menuData?.subSections[0] ?? null),
         setSelectedSubsection,
         filteredItems,
+        setSearchText,
         isLoading
     };
 };

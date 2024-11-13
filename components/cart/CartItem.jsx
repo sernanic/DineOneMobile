@@ -9,7 +9,6 @@ const CartItem = ({ item }) => {
     const handleIncrement = () => addProduct(item);
     const handleDecrement = () => reduceProduct(item);
     const handleRemoval = () => removeProduct(item);
-    console.log("item", item)
 
     return (
         <View style={styles.cardContainer}>

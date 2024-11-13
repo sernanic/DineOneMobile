@@ -2,32 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from '@/constants/Colors';
 
-const HorizontalSubsectionList = ({ subsections, onSelectSubsection }) => {
-    const [selectedId, setSelectedId] = useState(null);
-
+const HorizontalSubsectionList = ({ subsections, selectedSubsection, onSelectSubsection }) => {
     useEffect(() => {
-        if (subsections.length > 0 && selectedId === null) {
-            setSelectedId(subsections[0].id);
+        if (subsections.length > 0 && !selectedSubsection) {
             onSelectSubsection(subsections[0]);
         }
-    }, [subsections, selectedId, onSelectSubsection]);
-
-    const handleSelectSubsection = (item) => {
-        setSelectedId(item.id);
-        onSelectSubsection(item);
-    };
+    }, [subsections, selectedSubsection, onSelectSubsection]);
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={[
                 styles.subsectionItem,
-                item.id === selectedId ? styles.selectedItem : styles.unselectedItem
+                item.id === selectedSubsection?.id ? styles.selectedItem : styles.unselectedItem
             ]}
-            onPress={() => handleSelectSubsection(item)}
+            onPress={() => onSelectSubsection(item)}
         >
             <Text style={[
                 styles.subsectionText,
-                item.id === selectedId ? styles.selectedText : styles.unselectedText
+                item.id === selectedSubsection?.id ? styles.selectedText : styles.unselectedText
             ]}>
                 {item.name}
             </Text>

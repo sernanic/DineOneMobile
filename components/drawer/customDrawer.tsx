@@ -7,12 +7,16 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LogoutButton from '@/components/auth/logoutButton'
+import { useGreeting } from '@/hooks/useGreeting';
+import { useCustomerStore } from '@/store/customerStore';
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
     const navigation = useNavigation();
     const router = useRouter()
     const pathname = usePathname();
     const { top, bottom } = useSafeAreaInsets();
+    const { greeting, greetingIcon } = useGreeting();
+    const customer = useCustomerStore((state) => state?.customer || {});
 
     const drawerItems = [
         { label: 'Profile', path: '/(tabs)/profile', icon: 'person' },
@@ -34,7 +38,13 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>Hi Nick!</Text>
+                <View style={styles.greetingRow}>
+                    <Ionicons name={greetingIcon} size={24} color="#666" />
+                    <Text style={styles.greeting}>{greeting}</Text>
+                </View>
+                <Text style={styles.headerText}>
+                    {customer?.firstName || 'Guest'} {customer?.lastName || ''}
+                </Text>
             </View>
             
             <DrawerContentScrollView {...props} contentContainerStyle={styles.scrollContent}>
@@ -102,6 +112,16 @@ const styles = StyleSheet.create({
         paddingTop: 60,
         borderBottomWidth: 1,
         borderBottomColor: '#F0F0F0',
+    },
+    greetingRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    greeting: {
+        fontSize: 16,
+        color: '#666',
+        marginLeft: 8,
     },
     headerText: {
         fontSize: 28,

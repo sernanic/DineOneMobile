@@ -1,27 +1,29 @@
-import React from 'react';
-import { Text, View, StyleSheet, ScrollView, Dimensions, SafeAreaView, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Text, View, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import GeneralHeader from '@/components/general/header';
 import FeaturedCard from '@/components/home/FeaturedCard';
 import EditorChoiceItem from '@/components/home/EditorChoiceItem';
 import { featuredItems, defaultImage } from '@/constants/mockData';
-import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
 import { API_BASE_URL } from '@/constants/Config';
 import { useCustomerStore } from '@/store/customerStore';
 import { useCustomerData } from '@/hooks/useCustomerData';
 import { useAuthStore } from '@/store/authStore';
-import { useGreeting } from '@/hooks/useGreeting';
 import { usePopularItems } from '@/hooks/usePopularItems';
-
+import useMenuData from '@/hooks/useMenuData';
 
 const Menu = () => {
-  const { greeting, greetingIcon } = useGreeting();
+  const { allSubSections } = useMenuData();
+  
+  console.log("allSubSections", allSubSections)
+
+  const router = useRouter();
   const { popularItems, isLoading, error } = usePopularItems();
   const customer = useCustomerStore((state) => state?.customer || {});
   const { fetchCustomerData } = useCustomerData();
   const session = useAuthStore((state) => state.session);
+
   useEffect(() => {
     const getCustomerData = async () => {
       if (session?.user?.id && !customer?.firstName) {
@@ -38,7 +40,7 @@ const Menu = () => {
   const renderPopularItems = useMemo(() => {
     if (isLoading) return <ActivityIndicator size="large" />;
     if (error) return <Text style={styles.errorText}>Error: {error}</Text>;
-    if (popularItems.length === 0) return <Text>No popular items available</Text>;
+    if (!popularItems?.length) return <Text>No popular items available</Text>;
 
     return popularItems.map((item) => (
       <EditorChoiceItem 
@@ -46,9 +48,54 @@ const Menu = () => {
         title={item.name}
         image={item.images?.[0]?.imageUrl ? { uri: item.images[0].imageUrl } : defaultImage}
         price={item.price}
+        isNew={item.isNew}
       />
     ));
   }, [popularItems, isLoading, error]);
+
+  const renderMenuSections = () => (
+    <>
+      <View style={styles.menuHeaderContainer}>
+        <Text style={styles.menuTitle}>Menu</Text>
+        <TouchableOpacity 
+          style={styles.fullMenuButton}
+          onPress={() => router.push('/menu')}
+        >
+          <Ionicons name="book-outline" size={24} color="#000" />
+          <Text style={styles.fullMenuText}>Full Menu</Text>
+          <Ionicons name="chevron-forward" size={24} color="#000" />
+        </TouchableOpacity>
+      </View>
+      <ScrollView 
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.menuSectionsContainer}
+      >
+        {allSubSections?.length > 0 && allSubSections
+          .filter(section => section.name.toLowerCase() !== 'all')
+          .map((section) => (
+            <TouchableOpacity 
+              key={section.id} 
+              style={styles.menuSectionItem}
+              onPress={() => router.push({
+                pathname: '/menu',
+                params: { section: section.name.toLowerCase() }
+              })}
+            >
+              <Image 
+                source={
+                  section.image 
+                    ? { uri: section.image }
+                    : require('@/assets/images/image-product-1-landscape.jpg')
+                } 
+                style={styles.sectionIcon} 
+              />
+              <Text style={styles.sectionText}>{section.name.toUpperCase()}</Text>
+            </TouchableOpacity>
+          ))}
+      </ScrollView>
+    </>
+  );
 
   return (
     <>
@@ -58,16 +105,6 @@ const Menu = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <View style={styles.header}>
-            <View>
-              <View style={styles.greetingRow}>
-                <Ionicons name={greetingIcon} size={24} color="#666" />
-                <Text style={styles.greeting}>{greeting}</Text>
-              </View>
-              <Text style={styles.userName}>{customer?.firstName || 'Guest'} {customer?.lastName || ''}</Text>
-            </View>
-          </View>
-
           <Text style={styles.sectionTitle}>Featured</Text>
           <ScrollView 
             horizontal 
@@ -82,10 +119,17 @@ const Menu = () => {
             ))}
           </ScrollView>
 
+          
+          {renderMenuSections()}
+
           <Text style={styles.sectionTitle}>Popular Items</Text>
-          <View style={styles.editorChoiceContainer}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.popularItemsScroll}
+          >
             {renderPopularItems}
-          </View>
+          </ScrollView>
         </ScrollView>
       </View>
     </>
@@ -100,46 +144,71 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 220,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-  },
-  greetingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  greeting: {
-    fontSize: 16,
-    color: '#666',
-    marginLeft: 8,
-  },
-  userName: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginTop: 4,
+    paddingBottom: 120,
   },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
     marginLeft: 20,
-    marginTop: 20,
-    marginBottom: 16,
+    marginTop: 10,
+    marginBottom: 10,
   },
-  featuredScroll: {
-    paddingLeft: 20,
-  },
-  editorChoiceContainer: {
-    paddingHorizontal: 20,
+  menuTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    marginLeft: 20,
   },
   errorText: {
     color: 'red',
     fontSize: 16,
     marginTop: 10,
+  },
+  featuredScroll: {
+    paddingLeft: 20,
+  },
+  popularItemsScroll: {
+    paddingLeft: 20,
+  },
+  menuSectionsContainer: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  menuSectionItem: {
+    width: 120,
+    marginBottom: 12,
+    alignItems: 'center',
+    height: 130,
+    position: 'relative',
+  },
+  sectionIcon: {
+    width: '100%',
+    height: 100,
+    resizeMode: 'cover',
+    borderRadius: 12,
+  },
+  sectionText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 4,
+    color: '#000',
+  },
+  menuHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 20,
+    marginTop: 25,
+    marginBottom: 10,
+  },
+  fullMenuButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  fullMenuText: {
+    fontSize: 16,
+    color: '#000',
   },
 });
 

@@ -1,53 +1,56 @@
 import React from 'react';
-import { TouchableOpacity, Text, Image, View, StyleSheet } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-const EditorChoiceItem = ({ title, image }) => (
-  <TouchableOpacity style={styles.editorChoiceItem}>
-    <Image source={image} style={styles.editorChoiceImage} />
-    <Text style={styles.editorChoiceTitle}>{title}</Text>
-    <View style={styles.arrowContainer}>
-      <AntDesign name="arrowright" size={20} color="white" />
-    </View>
-  </TouchableOpacity>
-);
+const EditorChoiceItem = ({ title, image, price, isNew = false }) => {
+  return (
+    <TouchableOpacity style={styles.container}>
+      {isNew && (
+        <View style={styles.newBadge}>
+          <Text style={styles.newText}>NEW</Text>
+        </View>
+      )}
+      <Image source={image} style={styles.image} />
+      <Text style={styles.title} numberOfLines={1}>{title}</Text>
+      <Text style={styles.calories}>Cal.: 930-1100</Text>
+      <Text style={styles.price}>${(price / 100).toFixed(2)}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
-  editorChoiceItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 16,
-    marginBottom: 16,
-    padding: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+  container: {
+    width: 160,
+    marginRight: 8,
+    borderRadius: 6,
+    padding: 8,
   },
-  editorChoiceImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    marginRight: 16,
+  newBadge: {
+    top: 8,
+    left: 8,
+    padding: 2,
   },
-  editorChoiceTitle: {
+  newText: {
+    marginLeft: 2,
+    fontSize: 10,
+  },
+  image: {
+    width: '100%',
+    height: 120,
+    marginBottom: 8,
+    resizeMode: 'cover',
+    borderRadius: 8,
+  },
+  title: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  calories: {
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  price: {
     fontSize: 16,
-    fontWeight: '500',
-    flex: 1,
-  },
-  arrowContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#042628',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  }
 });
 
 export default EditorChoiceItem; 

@@ -10,26 +10,30 @@ import useMenuData from '@/hooks/useMenuData';
 const MenuScreen = () => {
     const router = useRouter();
     const { section } = useLocalSearchParams();
-    const [searchText, setSearchText] = useState('');
+    const [searchText, setLocalSearchText] = useState('');
     const { 
         sectionItems, 
         subSections, 
         selectedSubsection, 
         setSelectedSubsection, 
-        filteredItems 
+        filteredItems,
+        setSearchText
     } = useMenuData(section);
 
-    const handleSearch = (text) => {
-        setSearchText(text);
-        if (selectedSubsection && selectedSubsection.id !== 0) {
-            return sectionItems.filter(item => 
-                item.name.toLowerCase().includes(text.toLowerCase()) &&
-                item.subsectionId === selectedSubsection.id
+    useEffect(() => {
+        if (section && subSections.length > 0) {
+            const sectionToSelect = subSections.find(
+                sub => sub.name.toLowerCase() === section.toLowerCase()
             );
+            if (sectionToSelect) {
+                setSelectedSubsection(sectionToSelect);
+            }
         }
-        return sectionItems.filter(item =>
-            item.name.toLowerCase().includes(text.toLowerCase())
-        );
+    }, [section, subSections, setSelectedSubsection]);
+
+    const handleSearch = (text) => {
+        setLocalSearchText(text);
+        setSearchText(text);
     };
 
     const handleExit = () => {
@@ -50,6 +54,7 @@ const MenuScreen = () => {
                 
                 <HorizontalSubsectionList
                     subsections={subSections}
+                    selectedSubsection={selectedSubsection}
                     onSelectSubsection={setSelectedSubsection}
                 />
                 
@@ -65,7 +70,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     searchContainer: {
-        paddingTop: 15
+        paddingTop: 15,
+        marginBottom: 15
     }
 });
 
