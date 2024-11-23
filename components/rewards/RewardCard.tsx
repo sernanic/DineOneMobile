@@ -10,10 +10,14 @@ const RewardCard: React.FC<RewardCardProps> = ({ item }) => {
   return (
     <TouchableOpacity style={styles.rewardItem}>
       <View style={styles.rewardImageContainer}>
-        <Image 
-          source={{ uri: item.imgsrc }} 
-          style={styles.rewardImage}
-        />
+        {item.imgsrc ? (
+          <Image 
+            source={{ uri: item.imgsrc }}
+            style={styles.rewardImage}
+          />
+        ) : (
+          <Ionicons name="gift-outline" size={30} color="#666" />
+        )}
       </View>
       <View style={styles.rewardInfo}>
         <Text style={styles.rewardTitle}>{item.title}</Text>
