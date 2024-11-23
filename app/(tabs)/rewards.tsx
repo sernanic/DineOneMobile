@@ -1,14 +1,15 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import React from 'react';
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import foodRewards from '@/data/foodRewards';
 import RewardCard from '@/components/rewards/RewardCard';
 import PointsCard from '@/components/rewards/PointsCard';
+import { useRewards } from '@/hooks/useRewards';
 
 const RewardsScreen: React.FC = () => {
   const [activeTab] = React.useState('Redeem');
   const userPoints = 0;
+  const { rewards, isLoading, error } = useRewards();
 
   return (
     <View style={styles.container}>
@@ -28,9 +29,17 @@ const RewardsScreen: React.FC = () => {
       >
         <Text style={styles.redeemTitle}>Redeem</Text>
         <View style={styles.rewardsList}>
-          {foodRewards.map((item) => (
-            <RewardCard key={item.id} item={item} />
-          ))}
+          {isLoading ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : error ? (
+            <Text style={styles.errorText}>{error}</Text>
+          ) : rewards.length === 0 ? (
+            <Text style={styles.noRewardsText}>No rewards available</Text>
+          ) : (
+            rewards.map((item:any) => (
+              <RewardCard key={item.id} item={item} />
+            ))
+          )}
         </View>
       </ScrollView>
     </View>
@@ -74,6 +83,18 @@ const styles = StyleSheet.create({
   },
   rewardsList: {
     gap: 16,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+  },
+  noRewardsText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#666',
   },
 });
 

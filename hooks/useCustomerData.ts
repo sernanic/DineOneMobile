@@ -1,36 +1,29 @@
-import axios from 'axios';
 import { MERCHANT_ID, CLIENT_ID } from '@/constants/Config';
+import { authenticatedRequest } from '@/utils/apiClient';
+
+interface CustomerData {
+  customer: any; // Replace with proper customer type
+}
 
 export const useCustomerData = () => {
-  const fetchCustomerData = async (authUUID: string) => {
+  const fetchCustomerData = async () => {
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:4000/api/v1/client/${CLIENT_ID}/merchant/${MERCHANT_ID}/customers`,
-        {
-          params: { authUUID },
-          headers: {
-            'Accept': 'application/json'
-          }
-        }
+      const data = await authenticatedRequest<CustomerData>(
+        'get',
+        `/api/v1/client/${CLIENT_ID}/merchant/${MERCHANT_ID}/customers`
       );
       
       return {
-        data: response.data.customer,
+        data: data.customer,
         error: null
       };
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return {
-          data: null,
-          error: error.response?.data?.error || 'An unexpected error occurred'
-        };
-      }
       return {
         data: null,
-        error: 'An unexpected error occurred'
+        error: error instanceof Error ? error.message : 'An unexpected error occurred'
       };
     }
   };
 
   return { fetchCustomerData };
-}; 
+};

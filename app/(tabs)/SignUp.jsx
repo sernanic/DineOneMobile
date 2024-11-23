@@ -189,6 +189,8 @@ export default function SignUp() {
                 inputContainerStyle={styles.inputField}
                 inputStyle={styles.inputText}
                 errorMessage={errors.password?.message}
+                textContentType="none"
+                autoComplete="off"
               />
             )}
           />
@@ -219,6 +221,8 @@ export default function SignUp() {
                 inputContainerStyle={styles.inputField}
                 inputStyle={styles.inputText}
                 errorMessage={errors.confirmPassword?.message}
+                textContentType="none"
+                autoComplete="off"
               />
             )}
           />

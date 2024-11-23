@@ -5,9 +5,8 @@ import Animated, { useSharedValue, useAnimatedScrollHandler, interpolate, useRed
 import { LinearGradient } from 'expo-linear-gradient';
 import { BottomSheetProps } from '../types';
 import ReadMoreText from '@/components/general/ReadMoreText';
-import axios from 'axios';
 import { useCustomerStore } from '@/store/customerStore';
-import { MERCHANT_ID, CLIENT_ID,API_BASE_URL } from '@/constants/Config';
+import { authenticatedRequest } from '@/utils/apiClient';
 
 interface HeaderProps {
     item: BottomSheetProps['item'];
@@ -32,15 +31,15 @@ const Header: React.FC<HeaderProps> = ({ item, handleCloseModal, clientId, merch
         
         setIsLoading(true);
         try {
-            const response = await axios.post(
-                `${API_BASE_URL}/api/v1/client/${clientId}/merchant/${merchantId}/customers/favorites`,
+            const response = await authenticatedRequest(
+                'post',
+                `/api/v1/client/${clientId}/merchant/${merchantId}/customers/favorites`,
                 {
-                    itemId: item.itemId,
-                    authUUID: authUUID
+                    data: { itemId: item.itemId }
                 }
             );
             
-            if (response.data) {
+            if (response) {
                 // Toggle the favorite state
                 setIsFavorited(prev => !prev);
                 
@@ -59,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ item, handleCloseModal, clientId, merch
                         clientId,
                         createdAt: new Date().toISOString(),
                         customerAuthUUID: authUUID,
-                        id: response.data.id,
+                        id: response.id,
                         itemId: item.itemId
                     };
                     updatedCustomer.favorites = [...(customer.favorites || []), newFavorite];
@@ -69,9 +68,6 @@ const Header: React.FC<HeaderProps> = ({ item, handleCloseModal, clientId, merch
             }
         } catch (error) {
             console.error('Failed to toggle favorite:', error);
-            if (axios.isAxiosError(error)) {
-                console.error('Error details:', error.response?.data);
-            }
         } finally {
             setIsLoading(false);
         }

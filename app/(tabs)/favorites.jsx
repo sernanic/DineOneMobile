@@ -5,11 +5,11 @@ import SearchInput from '@/components/general/SearchInput';
 import Header from '@/components/general/header';
 import MenuItemsGrid from '@/components/section/MenuItemsGrid';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useCustomerStore } from '@/store/customerStore';
-import { CLIENT_ID, MERCHANT_ID,API_BASE_URL } from '@/constants/Config';
+import { CLIENT_ID, MERCHANT_ID } from '@/constants/Config';
 import useMenuData from '@/hooks/useMenuData';
 import { useFocusEffect } from '@react-navigation/native';
+import { authenticatedRequest } from '@/utils/apiClient';
 
 function FavoritesScreen() {
   const [favorites, setFavorites] = useState([]);
@@ -28,18 +28,13 @@ function FavoritesScreen() {
 
   const fetchFavorites = async () => {
     try {
-      const authUUID = useCustomerStore.getState().customer.authUUID;
-      const response = await axios.get(
-        `${API_BASE_URL}/api/v1/client/${CLIENT_ID}/merchant/${MERCHANT_ID}/customers/favorites`,
-        {
-          params: {
-            authUUID: authUUID
-          }
-        }
+      const data = await authenticatedRequest(
+        'get',
+        `/api/v1/client/${CLIENT_ID}/merchant/${MERCHANT_ID}/customers/favorites`
       );
-      setFavorites(response.data.favorites);
+      setFavorites(data.favorites);
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
