@@ -9,7 +9,9 @@ const EditorChoiceItem = ({ title, image, price, isNew = false }) => {
           <Text style={styles.newText}>NEW</Text>
         </View>
       )}
-      <Image source={image} style={styles.image} />
+      <View style={styles.imageContainer}>
+        <Image source={image} style={styles.image} />
+      </View>
       <Text style={styles.title} numberOfLines={1}>{title}</Text>
       <Text style={styles.calories}>Cal.: 930-1100</Text>
       <Text style={styles.price}>${(price / 100).toFixed(2)}</Text>
@@ -33,10 +35,22 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     fontSize: 10,
   },
+  imageContainer: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 2.5,
+    elevation: 2,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    marginBottom: 8,
+  },
   image: {
     width: '100%',
     height: 120,
-    marginBottom: 8,
     resizeMode: 'cover',
     borderRadius: 8,
   },
