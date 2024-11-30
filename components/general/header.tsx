@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { useNavigation } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
-import LocationDrawer, { LocationDrawerRef } from './locationDrawer';
+import LocationDrawer, { LocationDrawerRef } from './locationDrawer/locationDrawer';
 
 
 const MenuIcon = () => {

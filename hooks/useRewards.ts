@@ -1,14 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { API_BASE_URL, CLIENT_ID, MERCHANT_ID } from '@/constants/Config';
+import { API_BASE_URL, CLIENT_ID, DEFAULT_MERCHANT_ID } from '@/constants/Config';
+import { useMerchantStore } from '@/store/merchantStore';
 import { RewardItem } from '@/types/rewards';
 
 export const useRewards = () => {
+  const merchantId = useMerchantStore((state) => state.merchantId) || DEFAULT_MERCHANT_ID;
+
   const { data: rewards = [], isLoading, error } = useQuery({
-    queryKey: ['rewards'],
+    queryKey: ['rewards', merchantId],
     queryFn: async () => {
       const response = await axios.get(
-        `${API_BASE_URL}/api/client/${CLIENT_ID}/rewards/${MERCHANT_ID}`
+        `${API_BASE_URL}/api/client/${CLIENT_ID}/rewards/${merchantId}`
       );
       
       if (!response.data.success) {

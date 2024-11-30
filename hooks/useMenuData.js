@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useMerchantStore } from '../store/merchantStore';
+
+const DEFAULT_MERCHANT_ID = '6JDE8MZSA6FJ1';
 
 const useMenuData = (section) => {
     const [selectedSubsection, setSelectedSubsectionState] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [filteredItems, setFilteredItems] = useState([]);
+    const merchantId = useMerchantStore((state) => state.merchantId) || DEFAULT_MERCHANT_ID;
 
     // Using React Query for data fetching and caching
     const { data: menuData, isLoading } = useQuery({
-        queryKey: ['menuData', section],
+        queryKey: ['menuData', section, merchantId],
         queryFn: async () => {
-            const response = await axios.get('http://127.0.0.1:4000/api/10/categories/6JDE8MZSA6FJ1');
+            const response = await axios.get(`http://127.0.0.1:4000/api/10/categories/${merchantId}`);
             const { categories } = response.data;
             const transformedSubSections = categories.map(category => ({
                 id: category.categoryId,

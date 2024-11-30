@@ -8,6 +8,7 @@ import Colors from '@/constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { useCustomerStore } from '@/store/customerStore'
+import { CLIENT_ID, DEFAULT_MERCHANT_ID } from '@/constants/Config'
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false)
@@ -24,8 +25,8 @@ export default function SignUp() {
     }
   })
   const navigation = useNavigation()
-  const clientId = 10
-  const merchantId = '6JDE8MZSA6FJ1'
+  const clientId = CLIENT_ID
+  const merchantId = DEFAULT_MERCHANT_ID
   // Get password value for comparison
   const password = watch('password')
 

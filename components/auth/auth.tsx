@@ -6,7 +6,6 @@ import { useAuthStore } from '@/store/authStore';
 import Colors from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MERCHANT_ID, CLIENT_ID,API_BASE_URL } from '@/constants/Config';
 import axios from 'axios';
 import { useCustomerStore } from '@/store/customerStore';
 import { useCustomerData } from '@/hooks/useCustomerData';

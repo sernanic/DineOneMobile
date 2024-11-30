@@ -17,7 +17,6 @@ import Colors from '@/constants/Colors';
 const Menu = () => {
   const { allSubSections } = useMenuData();
   
-  console.log("allSubSections", allSubSections)
 
   const router = useRouter();
   const { popularItems, isLoading, error } = usePopularItems();

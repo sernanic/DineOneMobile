@@ -6,10 +6,11 @@ import Header from '@/components/general/header';
 import MenuItemsGrid from '@/components/section/MenuItemsGrid';
 import { useState, useEffect } from 'react';
 import { useCustomerStore } from '@/store/customerStore';
-import { CLIENT_ID, MERCHANT_ID } from '@/constants/Config';
+import { CLIENT_ID, DEFAULT_MERCHANT_ID } from '@/constants/Config';
 import useMenuData from '@/hooks/useMenuData';
 import { useFocusEffect } from '@react-navigation/native';
 import { authenticatedRequest } from '@/utils/apiClient';
+import { useMerchantStore } from '@/store/merchantStore';
 
 function FavoritesScreen() {
   const [favorites, setFavorites] = useState([]);
@@ -17,6 +18,7 @@ function FavoritesScreen() {
   const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState('');
   const navigation = useNavigation();
+  const merchantId = useMerchantStore((state) => state.merchantId) || DEFAULT_MERCHANT_ID;
 
   const { sectionItems, isLoading: isMenuLoading } = useMenuData('favorites');
 
@@ -30,7 +32,7 @@ function FavoritesScreen() {
     try {
       const data = await authenticatedRequest(
         'get',
-        `/api/v1/client/${CLIENT_ID}/merchant/${MERCHANT_ID}/customers/favorites`
+        `/api/v1/client/${CLIENT_ID}/merchant/${merchantId}/customers/favorites`
       );
       setFavorites(data.favorites);
     } catch (err) {

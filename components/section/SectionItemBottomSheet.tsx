@@ -10,8 +10,9 @@ import Header from "./BottomSheetComponents/Header";
 import Content from './BottomSheetComponents/Content';
 import BottomActions from './BottomSheetComponents/BottomActions';
 import { BottomSheetProps, ModifierGroup } from './types';
-import { CLIENT_ID, MERCHANT_ID } from '@/constants/Config';
+import { CLIENT_ID, DEFAULT_MERCHANT_ID } from '@/constants/Config';
 import { useCustomerStore } from '@/store/customerStore';
+import { useMerchantStore } from '@/store/merchantStore';
 
 const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
     const snapPoints = useMemo(() => ['94%'], []);
@@ -29,6 +30,7 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
 
     const shouldReduceMotion = useReducedMotion();
     const customer = useCustomerStore((state) => state?.customer || {});
+    const merchantId = useMerchantStore((state) => state.merchantId) || DEFAULT_MERCHANT_ID;
     useEffect(() => {
         setTotalPrice(item.price * localQuantity);
     }, [item, localQuantity]);
@@ -101,7 +103,7 @@ const BottomSheet = forwardRef<Ref, BottomSheetProps>(({ item }, ref) => {
             }}
         >
             <View style={styles.contentContainer}>
-                <Header item={item} handleCloseModal={handleCloseModal} clientId={CLIENT_ID} merchantId={MERCHANT_ID} authUUID={customer.authUUID} isFavorited={isItemFavorited} />
+                <Header item={item} handleCloseModal={handleCloseModal} clientId={CLIENT_ID} merchantId={merchantId} authUUID={customer.authUUID} isFavorited={isItemFavorited} />
                 <Content 
                     item={item}
                     modifierGroups={modifierGroups}
