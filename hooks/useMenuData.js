@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useMerchantStore } from '../store/merchantStore';
-
-const DEFAULT_MERCHANT_ID = '6JDE8MZSA6FJ1';
+import {DEFAULT_MERCHANT_ID} from '../constants/Config';
 
 const useMenuData = (section) => {
     const [selectedSubsection, setSelectedSubsectionState] = useState(null);

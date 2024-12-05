@@ -13,6 +13,7 @@ import { useAuthStore } from '@/store/authStore';
 import { usePopularItems } from '@/hooks/usePopularItems';
 import useMenuData from '@/hooks/useMenuData';
 import Colors from '@/constants/Colors';
+import Features from '@/components/features/Features';
 
 const Menu = () => {
   const { allSubSections } = useMenuData();
@@ -94,10 +95,7 @@ const Menu = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-
-
           {renderCategories()}
-
           <View style={styles.popularContainer}>
             <View style={styles.sectionHeaderRow}>
               <Text style={styles.sectionHeader}>Popular Now</Text>
@@ -114,25 +112,14 @@ const Menu = () => {
             </ScrollView>
           </View>
 
-          <View style={styles.featuredContainer}>
+          <View style={[styles.featuredContainer, styles.popularContainer]}>
             <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionHeader}>Featured</Text>
+              <Text style={styles.sectionHeader}>Features</Text>
               <TouchableOpacity>
                 <Text style={styles.viewAll}>View all</Text>
               </TouchableOpacity>
             </View>
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false}
-              style={styles.featuredScroll}
-            >
-              {featuredItems.map((item) => (
-                <FeaturedCard 
-                  key={item.id}
-                  {...item}
-                />
-              ))}
-            </ScrollView>
+            <Features />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -212,7 +199,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   featuredContainer: {
-    marginTop: 24,
+    // marginTop: 24,
   },
   featuredScroll: {
     paddingLeft: 20,
